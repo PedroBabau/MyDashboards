@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Canvas Lab | Painel Interativo</title>
+    <style>
+        * {
+            user-select: none;
+        }
+        
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1400px;
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .canvas-area {
+            flex: 2;
+            min-width: 500px;
+        }
+        
+        canvas {
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            background: #0f0f1a;
+            cursor: crosshair;
+        }
+        
+        .controls {
+            flex: 1;
+            min-width: 280px;
+            background: rgba(15, 25, 45, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+        }
+        
+        .controls h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #a78bfa, #f472b6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .controls p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .filter-section {
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+            margin-top: 10px;
+        }
+        
+        .filter-section h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #a78bfa;
+        }
+        
+        .filter-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-btn {
+            background: #334155;
+            padding: 8px;
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+        
+        .filter-btn:hover {
+            background: #475569;
+            transform: none;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            padding: 0;
+            margin: 10px 0;
+        }
+        
+        .value-display {
+            display: inline-block;
+            background: #1e293b;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        
+        .status {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        .status.loading {
+            color: #fbbf24;
+        }
+        
+        @media (max-width: 900px) {
+            .canvas-area { min-width: 300px; }
+            canvas { width: 100%; height: auto; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="canvas-area">
+            <div id="p5canvas"></div>
+        </div>
+        <div class="controls">
+            <h2>🎨 AI Canvas Lab</h2>
+            <p>Gerador de imagens com IA + Filtros interativos em tempo real</p>
+            
+            <div class="input-group">
+                <label>🎭 Prompt criativo</label>
+                <input type="text" id="prompt" value="ethereal cosmic nebula, vibrant colors, digital art" placeholder="Descreva sua imagem...">
+            </div>
+            
+            <div class="input-group">
+                <label>📐 Estilo</label>
+                <select id="style">
+                    <option value="cinematic">Cinematográfico</option>
+                    <option value="fantasy">Fantasia</option>
+                    <option value="cyberpunk">Cyberpunk</option>
+                    <option value="anime">Anime</option>
+                    <option value="oil-painting">Pintura a óleo</option>
+                </select>
+            </div>
+            
+            <button id="generateBtn">✨ Gerar Imagem com IA</button>
+            
+            <div class="filter-section">
+                <h3>🎛️ Pós-Processamento Interativo</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn" data-filter="pixelate">Pixelate</button>
+                    <button class="filter-btn" data-filter="glitch">Glitch Art</button>
+                    <button class="filter-btn" data-filter="invert">Inverter Cores</button>
+                    <button class="filter-btn" data-filter="threshold">Limiar (B&W)</button>
+                    <button class="filter-btn" data-filter="emboss">Relevo</button>
+                    <button class="filter-btn" data-filter="edges">Detecção Bordas</button>
+                    <button class="filter-btn" data-filter="reset">Resetar</button>
+                </div>
+                
+                <div class="input-group">
+                    <label>🌀 Distorção Radial <span id="radialVal" class="value-display">0</span></label>
+                    <input type="range" id="radialDistort" min="0" max="100" value="0" step="1">
+                </div>
+                
+                <div class="input-group">
+                    <label>🌈 Saturação <span id="satVal" class="value-display">100%</span></label>
+                    <input type="range" id="saturation" min="0" max="200" value="100" step="1">
+                </div>
+                
+                <div class="input-group">
+                    <label>🔆 Brilho <span id="brightVal" class="value-display">0</span></label>
+                    <input type="range" id="brightness" min="-100" max="100" value="0" step="1">
+                </div>
+            </div>
+            
+            <div class="status" id="status">
+                💡 Digite um prompt e clique em gerar!
+            </div>
+        </div>
+    </div>
+    <script src="/dashboard2/sketch.js"></script>
+</body>
+</html>
