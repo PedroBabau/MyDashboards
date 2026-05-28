@@ -39,4 +39,6 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 
 ## 🚀 Como Executar
 
-### Acesse online (GitHub Pages)
+### Acede online (GitHub Pages)
+https://pedrobabau.github.io/MyDashboards/
+### --------------------------- 
