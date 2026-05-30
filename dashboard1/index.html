@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Pulse | Dashboard Informativo</title>
+    <title>GeoPulse | Dashboard Geolocalização</title>
     <style>
         body {
             margin: 0;
             padding: 0;
-            background: #0a0a1a;
+            background: #0a0a2a;
             overflow: hidden;
             font-family: 'Courier New', monospace;
         }
@@ -41,7 +41,7 @@
         .info-panel h3 {
             margin: 0 0 8px 0;
             font-size: 14px;
-            color: #88ccff;
+            color: #66ffcc;
         }
         
         .data-row {
@@ -80,38 +80,60 @@
             z-index: 100;
             font-family: monospace;
             pointer-events: none;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+        
+        .globe-icon {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            font-size: 40px;
+            opacity: 0.3;
+            z-index: 10;
+            pointer-events: none;
         }
         
         @keyframes pulse {
             0%, 100% { opacity: 0.6; }
             50% { opacity: 1; }
         }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 </head>
 <body>
     <div class="info-panel" id="infoPanel">
-        <h3>🌌 COSMIC PULSE | Dados Espaciais em Tempo Real</h3>
+        <h3>🌍 GEOPULSE | Sua Localização no Mundo</h3>
         <div class="data-row">
             <div class="data-item">
-                <div class="data-label">📅 APOD (Imagem do Dia)</div>
-                <div class="data-value" id="apodTitle">Carregando...</div>
+                <div class="data-label">📍 País</div>
+                <div class="data-value" id="countryName">Carregando...</div>
             </div>
             <div class="data-item">
-                <div class="data-label">☀️ Velocidade do Vento Solar</div>
-                <div class="data-value" id="solarWind">--- km/s</div>
+                <div class="data-label">🏙️ Cidade</div>
+                <div class="data-value" id="cityName">Carregando...</div>
             </div>
             <div class="data-item">
-                <div class="data-label">🔥 Temperatura do Vento Solar</div>
-                <div class="data-value" id="solarTemp">--- K</div>
+                <div class="data-label">🌐 Endereço IP</div>
+                <div class="data-value" id="ipAddress">---</div>
             </div>
             <div class="data-item">
-                <div class="data-label">🧲 Densidade do Plasma</div>
-                <div class="data-value" id="plasmaDensity">--- /cm³</div>
+                <div class="data-label">🗺️ Coordenadas</div>
+                <div class="data-value" id="coordinates">---</div>
+            </div>
+            <div class="data-item">
+                <div class="data-label">⏰ Fuso Horário</div>
+                <div class="data-value" id="timezoneInfo">Carregando...</div>
             </div>
         </div>
     </div>
-    <div id="loading" class="loading">🔭 CONECTANDO À NASA API...</div>
+    <div id="loading" class="loading">🌍 LOCALIZANDO...</div>
+    <div class="globe-icon">🌐</div>
     <script src="/dashboard1/sketch.js"></script>
 </body>
 </html>
