@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Canvas Lab | Painel Interativo</title>
+    <title>Anime Gallery | Waifu.pics API</title>
     <style>
         * {
             user-select: none;
@@ -12,7 +12,7 @@
         body {
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #1a0a2e, #16213e, #0f3460);
             font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             justify-content: center;
@@ -32,6 +32,7 @@
         .canvas-area {
             flex: 2;
             min-width: 500px;
+            text-align: center;
         }
         
         canvas {
@@ -43,20 +44,22 @@
         
         .controls {
             flex: 1;
-            min-width: 280px;
-            background: rgba(15, 25, 45, 0.9);
+            min-width: 320px;
+            background: rgba(15, 25, 45, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 20px;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
             height: fit-content;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         
         .controls h2 {
             margin: 0 0 5px 0;
             font-size: 1.5rem;
-            background: linear-gradient(135deg, #a78bfa, #f472b6);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -80,21 +83,15 @@
             color: #cbd5e1;
         }
         
-        input, select {
+        select {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             border-radius: 12px;
             border: 1px solid #334155;
             background: #1e293b;
             color: white;
             font-size: 14px;
-            transition: all 0.3s;
-        }
-        
-        input:focus, select:focus {
-            outline: none;
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.3);
+            cursor: pointer;
         }
         
         button {
@@ -102,22 +99,18 @@
             padding: 12px;
             border-radius: 12px;
             border: none;
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-size: 16px;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(139, 92, 246, 0.3);
-        }
-        
-        button:active {
-            transform: translateY(0);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
         }
         
         .filter-section {
@@ -129,7 +122,7 @@
         .filter-section h3 {
             font-size: 1rem;
             margin-bottom: 15px;
-            color: #a78bfa;
+            color: #ff6b6b;
         }
         
         .filter-buttons {
@@ -178,11 +171,40 @@
         
         .status.loading {
             color: #fbbf24;
+            animation: pulse 1s infinite;
+        }
+        
+        .status.success {
+            color: #4ade80;
+        }
+        
+        .status.error {
+            color: #f87171;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+        
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #ff6b6b;
+            border-radius: 3px;
         }
         
         @media (max-width: 900px) {
             .canvas-area { min-width: 300px; }
             canvas { width: 100%; height: auto; }
+            .controls { min-width: 280px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
@@ -193,26 +215,32 @@
             <div id="p5canvas"></div>
         </div>
         <div class="controls">
-            <h2>🎨 AI Canvas Lab</h2>
-            <p>Gerador de imagens com IA + Filtros interativos em tempo real</p>
+            <h2>🎨 Anime Gallery</h2>
+            <p>Explore imagens de anime por categoria + Filtros interativos</p>
             
             <div class="input-group">
-                <label>🎭 Prompt criativo</label>
-                <input type="text" id="prompt" value="ethereal cosmic nebula, vibrant colors, digital art" placeholder="Descreva sua imagem...">
-            </div>
-            
-            <div class="input-group">
-                <label>📐 Estilo</label>
-                <select id="style">
-                    <option value="cinematic">Cinematográfico</option>
-                    <option value="fantasy">Fantasia</option>
-                    <option value="cyberpunk">Cyberpunk</option>
-                    <option value="anime">Anime</option>
-                    <option value="oil-painting">Pintura a óleo</option>
+                <label>🎭 Categoria de Imagem</label>
+                <select id="category">
+                    <option value="waifu">Waifu (Personagem Feminina)</option>
+                    <option value="neko">Neko (Garota Gato)</option>
+                    <option value="shinobu">Shinobu</option>
+                    <option value="megumin">Megumin</option>
+                    <option value="bully">Bully</option>
+                    <option value="cuddle">Cuddle (Abraço)</option>
+                    <option value="cry">Cry (Choro)</option>
+                    <option value="hug">Hug (Abraço)</option>
+                    <option value="awoo">Awoo</option>
+                    <option value="kiss">Kiss (Beijo)</option>
+                    <option value="lick">Lick (Lamber)</option>
+                    <option value="pat">Pat (Carinho)</option>
+                    <option value="smug">Smug (Arrogante)</option>
+                    <option value="highfive">High Five</option>
+                    <option value="nom">Nom (Comendo)</option>
+                    <option value="bite">Bite (Mordida)</option>
                 </select>
             </div>
             
-            <button id="generateBtn">✨ Gerar Imagem com IA</button>
+            <button id="fetchBtn">🎲 Buscar Imagem Aleatória</button>
             
             <div class="filter-section">
                 <h3>🎛️ Pós-Processamento Interativo</h3>
@@ -243,7 +271,7 @@
             </div>
             
             <div class="status" id="status">
-                💡 Digite um prompt e clique em gerar!
+                💡 Selecione uma categoria e clique em buscar!
             </div>
         </div>
     </div>
