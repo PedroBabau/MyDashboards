@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyDashboards | GeoPulse + Anime Gallery</title>
+    <title>MyDashboards | GeoPulse + AI Chatbot</title>
     <style>
         * {
             margin: 0;
@@ -89,13 +89,25 @@
             opacity: 0.3;
         }
         
+        .preview1::after {
+            content: "";
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(100,150,255,0.3) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
         .preview2 { 
-            background: linear-gradient(135deg, #1a0a2e, #3a1a4e, #5a2a6e);
+            background: linear-gradient(135deg, #1a0a2e, #2a1a4e, #3a2a6e);
             position: relative;
         }
         
         .preview2::before {
-            content: "🎨";
+            content: "🤖";
             position: absolute;
             font-size: 80px;
             bottom: 20px;
@@ -104,7 +116,7 @@
         }
         
         .preview2::after {
-            content: "✨";
+            content: "💬";
             position: absolute;
             font-size: 50px;
             top: 20px;
@@ -268,27 +280,27 @@
                     <div class="feature-list">
                         <span class="feature-tag">📍 Geolocalização</span>
                         <span class="feature-tag">🗺️ Globo 3D</span>
-                        <span class="feature-tag">🌐 apiip.net</span>
+                        <span class="feature-tag">🌐 ipapi.co</span>
                         <span class="feature-tag">✨ Partículas atmosféricas</span>
                     </div>
                     <a href="dashboard1/" class="btn btn-primary">Abrir GeoPulse →</a>
                 </div>
             </div>
 
-            <!-- Dashboard 2 - Anime Gallery -->
+            <!-- Dashboard 2 - AI Chatbot -->
             <div class="dashboard-card">
                 <div class="card-preview preview2"></div>
                 <div class="card-content">
-                    <span class="badge badge-interactive">🎨 Painel Interativo</span>
-                    <h2>Anime Gallery</h2>
-                    <p>Explore imagens de anime por categoria, aplique filtros em tempo real e manipule pixels com efeitos interativos como glitch, pixelate e distorção radial.</p>
+                    <span class="badge badge-interactive">🤖 Painel Interativo</span>
+                    <h2>AI Chatbot</h2>
+                    <p>Chat interativo com um robô desenhado em p5.js! O robô reage com expressões faciais enquanto conversa sobre tecnologia, programação e muito mais.</p>
                     <div class="feature-list">
-                        <span class="feature-tag">📸 API com CORS ativo</span>
-                        <span class="feature-tag">🎨 16+ categorias</span>
-                        <span class="feature-tag">🌀 Filtros em tempo real</span>
-                        <span class="feature-tag">✨ Manipulação de pixels</span>
+                        <span class="feature-tag">💬 Chat em tempo real</span>
+                        <span class="feature-tag">🤖 Robô com p5.js</span>
+                        <span class="feature-tag">😊 Expressões faciais</span>
+                        <span class="feature-tag">✨ API SimpleBot + Fallback</span>
                     </div>
-                    <a href="dashboard2/" class="btn btn-secondary">Abrir Anime Gallery →</a>
+                    <a href="dashboard2/" class="btn btn-secondary">Abrir AI Chatbot →</a>
                 </div>
             </div>
         </div>
@@ -296,26 +308,26 @@
         <div class="info-section">
             <h3>📡 APIs Integradas</h3>
             <ul>
-                <li>🌍 apiip.net - Geolocalização <span class="cors-badge">CORS ✓</span></li>
-                <li>🎨 Waifu.pics API - Imagens de Anime <span class="cors-badge">CORS ✓</span></li>
+                <li>🌍 ipapi.co - Geolocalização <span class="cors-badge">CORS ✓</span></li>
+                <li>💬 SimpleBot API - Chatbot Inteligente <span class="cors-badge">CORS ✓</span></li>
             </ul>
             
             <div class="api-detail">
-                <div>📌 <span>Dashboard 1 (GeoPulse):</span> API de geolocalização que detecta sua localização e cria uma visualização em globo 3D com partículas reativas.</div>
-                <div>📌 <span>Dashboard 2 (Anime Gallery):</span> API Waifu.pics - Selecione uma categoria (waifu, neko, hug, kiss, etc.) e receba imagens aleatórias de anime com 100% de confiabilidade e CORS habilitado [citation:2].</div>
+                <div>📌 <span>Dashboard 1 (GeoPulse):</span> API ipapi.co - Detecta sua localização (país, cidade, IP, coordenadas, fuso horário) e cria uma visualização em globo 3D com partículas reativas.</div>
+                <div>📌 <span>Dashboard 2 (AI Chatbot):</span> SimpleBot API + Fallback local - Chat interativo com robô desenhado em p5.js que responde a perguntas sobre tecnologia, programação, e mantém conversas naturais.</div>
             </div>
             
             <p style="margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
                 ⚡ Todas as APIs são gratuitas, têm CORS habilitado e não requerem chave de API.
             </p>
             <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #4a5568;">
-                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Pós-processamento interativo com manipulação de pixels
+                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Interação em tempo real
             </p>
         </div>
 
         <footer>
             <p>Projeto desenvolvido para a disciplina de Computação Orientada a Dados • Design de Interação / Multimédia • ISTEC</p>
-            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza apiip.net • Anime Gallery utiliza Waifu.pics API</p>
+            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza ipapi.co • AI Chatbot utiliza SimpleBot API</p>
         </footer>
     </div>
 </body>
