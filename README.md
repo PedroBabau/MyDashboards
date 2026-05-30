@@ -108,5 +108,10 @@ rect()     // Corpo e cabeça
 ellipse()  // Olhos e antenas
 arc()      // Boca (expressões)
 line()     // Antenas e detalhes
+```
+
+## GitHub Page do Projeto
 
 https://pedrobabau.github.io/MyDashboards/
+
+###
