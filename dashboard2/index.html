@@ -3,188 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Gallery | Waifu.pics API</title>
+    <title>AI Chatbot | Chat com Robô</title>
     <style>
         * {
-            user-select: none;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
         
         body {
-            margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #1a0a2e, #16213e, #0f3460);
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a2a, #1a1a3e, #0f172a);
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
         }
         
         .container {
+            max-width: 1300px;
+            width: 100%;
             display: flex;
             flex-wrap: wrap;
-            gap: 20px;
-            max-width: 1400px;
-            width: 100%;
+            gap: 25px;
             justify-content: center;
         }
         
-        .canvas-area {
-            flex: 2;
-            min-width: 500px;
+        .robot-area {
+            flex: 1;
+            min-width: 350px;
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 25px;
             text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .robot-canvas {
+            background: #0f0f1a;
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 20px;
         }
         
         canvas {
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            background: #0f0f1a;
-            cursor: crosshair;
-        }
-        
-        .controls {
-            flex: 1;
-            min-width: 320px;
-            background: rgba(15, 25, 45, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            height: fit-content;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-        
-        .controls h2 {
-            margin: 0 0 5px 0;
-            font-size: 1.5rem;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-        
-        .controls p {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
             display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #cbd5e1;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
-        select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: 1px solid #334155;
-            background: #1e293b;
-            color: white;
-            font-size: 14px;
-            cursor: pointer;
-        }
-        
-        button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
-        }
-        
-        .filter-section {
-            border-top: 1px solid #334155;
-            padding-top: 20px;
-            margin-top: 10px;
-        }
-        
-        .filter-section h3 {
-            font-size: 1rem;
-            margin-bottom: 15px;
-            color: #ff6b6b;
-        }
-        
-        .filter-buttons {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            margin-bottom: 15px;
-        }
-        
-        .filter-btn {
-            background: #334155;
-            padding: 8px;
-            font-size: 12px;
-            margin-bottom: 0;
-        }
-        
-        .filter-btn:hover {
-            background: #475569;
-            transform: none;
-        }
-        
-        input[type="range"] {
-            width: 100%;
-            padding: 0;
-            margin: 10px 0;
-        }
-        
-        .value-display {
-            display: inline-block;
-            background: #1e293b;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 12px;
-            margin-left: 8px;
-        }
-        
-        .status {
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 12px;
+        .robot-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
             margin-top: 15px;
-            font-size: 12px;
-            text-align: center;
-            color: #94a3b8;
         }
         
-        .status.loading {
-            color: #fbbf24;
-            animation: pulse 1s infinite;
-        }
-        
-        .status.success {
-            color: #4ade80;
-        }
-        
-        .status.error {
-            color: #f87171;
+        .status-led {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: pulse 1.5s infinite;
         }
         
         @keyframes pulse {
             0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+            50% { opacity: 0.4; }
+        }
+        
+        .chat-area {
+            flex: 1.5;
+            min-width: 400px;
+            background: rgba(15, 25, 45, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            display: flex;
+            flex-direction: column;
+            height: 600px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 30px 30px 0 0;
+        }
+        
+        .chat-header h2 {
+            color: white;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.bot {
+            justify-content: flex-start;
+        }
+        
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        
+        .message.user .message-avatar {
+            background: #3b82f6;
+            order: 2;
+        }
+        
+        .message.bot .message-avatar {
+            background: #8b5cf6;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .message.user .message-content {
+            background: #3b82f6;
+            color: white;
+            border-radius: 18px 18px 4px 18px;
+        }
+        
+        .message.bot .message-content {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 18px 18px 18px 4px;
+            border: 1px solid #334155;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            gap: 5px;
+            padding: 12px 16px;
+            background: #1e293b;
+            border-radius: 18px;
+            width: fit-content;
+            border: 1px solid #334155;
+        }
+        
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #94a3b8;
+            animation: typing 1.4s infinite;
+        }
+        
+        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+        
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+        
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 12px;
+        }
+        
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: white;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .chat-input-area input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+        }
+        
+        .chat-input-area button {
+            padding: 12px 24px;
+            border-radius: 25px;
+            border: none;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .chat-input-area button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .clear-btn {
+            background: #ef4444 !important;
+        }
+        
+        .clear-btn:hover {
+            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4) !important;
         }
         
         ::-webkit-scrollbar {
@@ -197,81 +255,56 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: #ff6b6b;
+            background: #3b82f6;
             border-radius: 3px;
         }
         
         @media (max-width: 900px) {
-            .canvas-area { min-width: 300px; }
-            canvas { width: 100%; height: auto; }
-            .controls { min-width: 280px; }
+            .robot-area { min-width: 300px; }
+            .chat-area { min-width: 350px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="canvas-area">
-            <div id="p5canvas"></div>
+        <!-- Área do Robô (desenhado com p5.js) -->
+        <div class="robot-area">
+            <div class="robot-canvas">
+                <div id="robotCanvas"></div>
+            </div>
+            <div class="robot-status">
+                <div class="status-led"></div>
+                <span style="color: #94a3b8; font-size: 12px;">IA Online | Modo Conversa</span>
+            </div>
+            <p style="color: #64748b; font-size: 11px; margin-top: 15px;">
+                🤖 Robô desenhado com p5.js - Olhos e expressões reagem à conversa
+            </p>
         </div>
-        <div class="controls">
-            <h2>🎨 Anime Gallery</h2>
-            <p>Explore imagens de anime por categoria + Filtros interativos</p>
-            
-            <div class="input-group">
-                <label>🎭 Categoria de Imagem</label>
-                <select id="category">
-                    <option value="waifu">Waifu (Personagem Feminina)</option>
-                    <option value="neko">Neko (Garota Gato)</option>
-                    <option value="shinobu">Shinobu</option>
-                    <option value="megumin">Megumin</option>
-                    <option value="bully">Bully</option>
-                    <option value="cuddle">Cuddle (Abraço)</option>
-                    <option value="cry">Cry (Choro)</option>
-                    <option value="hug">Hug (Abraço)</option>
-                    <option value="awoo">Awoo</option>
-                    <option value="kiss">Kiss (Beijo)</option>
-                    <option value="lick">Lick (Lamber)</option>
-                    <option value="pat">Pat (Carinho)</option>
-                    <option value="smug">Smug (Arrogante)</option>
-                    <option value="highfive">High Five</option>
-                    <option value="nom">Nom (Comendo)</option>
-                    <option value="bite">Bite (Mordida)</option>
-                </select>
+        
+        <!-- Área do Chat -->
+        <div class="chat-area">
+            <div class="chat-header">
+                <h2>
+                    <span>🤖</span> AI Assistant
+                    <span style="font-size: 12px; font-weight: normal; margin-left: auto;">powered by SimpleBot API</span>
+                </h2>
             </div>
             
-            <button id="fetchBtn">🎲 Buscar Imagem Aleatória</button>
-            
-            <div class="filter-section">
-                <h3>🎛️ Pós-Processamento Interativo</h3>
-                <div class="filter-buttons">
-                    <button class="filter-btn" data-filter="pixelate">Pixelate</button>
-                    <button class="filter-btn" data-filter="glitch">Glitch Art</button>
-                    <button class="filter-btn" data-filter="invert">Inverter Cores</button>
-                    <button class="filter-btn" data-filter="threshold">Limiar (B&W)</button>
-                    <button class="filter-btn" data-filter="emboss">Relevo</button>
-                    <button class="filter-btn" data-filter="edges">Detecção Bordas</button>
-                    <button class="filter-btn" data-filter="reset">Resetar</button>
-                </div>
-                
-                <div class="input-group">
-                    <label>🌀 Distorção Radial <span id="radialVal" class="value-display">0</span></label>
-                    <input type="range" id="radialDistort" min="0" max="100" value="0" step="1">
-                </div>
-                
-                <div class="input-group">
-                    <label>🌈 Saturação <span id="satVal" class="value-display">100%</span></label>
-                    <input type="range" id="saturation" min="0" max="200" value="100" step="1">
-                </div>
-                
-                <div class="input-group">
-                    <label>🔆 Brilho <span id="brightVal" class="value-display">0</span></label>
-                    <input type="range" id="brightness" min="-100" max="100" value="0" step="1">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        Olá! Eu sou o Assistente IA. Como posso ajudar você hoje?<br>
+                        <span style="font-size: 10px; color: #94a3b8;">Pergunte sobre tecnologia, programação, ou converse normalmente!</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="status" id="status">
-                💡 Selecione uma categoria e clique em buscar!
+            <div class="chat-input-area">
+                <input type="text" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off">
+                <button id="sendBtn">📤 Enviar</button>
+                <button id="clearBtn" class="clear-btn">🗑️ Limpar</button>
             </div>
         </div>
     </div>
