@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyDashboards</title>
+    <title>MyDashboards | GeoPulse + Anime Gallery</title>
     <style>
         * {
             margin: 0;
@@ -71,10 +71,46 @@
             height: 220px;
             background-size: cover;
             background-position: center;
+            position: relative;
+            overflow: hidden;
         }
 
-        .preview1 { background: linear-gradient(135deg, #1e1b4b, #312e81, #4338ca); }
-        .preview2 { background: linear-gradient(135deg, #2e1065, #4c1d95, #6d28d9); }
+        .preview1 { 
+            background: linear-gradient(135deg, #0a1628, #1a2a4a, #2a4a6a);
+            position: relative;
+        }
+        
+        .preview1::before {
+            content: "🌍";
+            position: absolute;
+            font-size: 80px;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.3;
+        }
+        
+        .preview2 { 
+            background: linear-gradient(135deg, #1a0a2e, #3a1a4e, #5a2a6e);
+            position: relative;
+        }
+        
+        .preview2::before {
+            content: "🎨";
+            position: absolute;
+            font-size: 80px;
+            bottom: 20px;
+            right: 20px;
+            opacity: 0.3;
+        }
+        
+        .preview2::after {
+            content: "✨";
+            position: absolute;
+            font-size: 50px;
+            top: 20px;
+            left: 20px;
+            opacity: 0.4;
+        }
 
         .card-content {
             padding: 1.8rem;
@@ -101,6 +137,21 @@
             color: #94a3b8;
             margin-bottom: 1.5rem;
             line-height: 1.5;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-tag {
+            background: rgba(255,255,255,0.1);
+            padding: 0.2rem 0.6rem;
+            border-radius: 1rem;
+            font-size: 0.7rem;
+            color: #cbd5e1;
         }
 
         .btn {
@@ -160,6 +211,31 @@
             font-size: 0.9rem;
         }
 
+        .api-detail {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem;
+            color: #94a3b8;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        
+        .api-detail span {
+            color: #60a5fa;
+        }
+
+        .cors-badge {
+            display: inline-block;
+            background: #10b981;
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 1rem;
+            margin-left: 0.5rem;
+        }
+
         footer {
             text-align: center;
             margin-top: 3rem;
@@ -177,30 +253,42 @@
 <body>
     <div class="container">
         <header>
-            <h1>MyDashboards</h1>
-            <p class="subtitle">Dashboards criativos com p5.js e APIs em tempo real</p>
+            <h1>✨ MyDashboards</h1>
+            <p class="subtitle">Dashboards criativos com p5.js e APIs em tempo real<br>Computação Orientada a Dados | ISTEC</p>
         </header>
 
         <div class="dashboards-grid">
-            <!-- Dashboard 1 -->
+            <!-- Dashboard 1 - GeoPulse -->
             <div class="dashboard-card">
                 <div class="card-preview preview1"></div>
                 <div class="card-content">
-                    <span class="badge badge-info">📊 Painel Informativo</span>
-                    <h2>Cosmic Pulse</h2>
-                    <p>Visualização artística contínua baseada em dados reais da NASA (Astronomia do Dia) e clima espacial. Cores, formas e movimento reagem a dados em tempo real.</p>
-                    <a href="dashboard1/" class="btn btn-primary">Abrir Dashboard →</a>
+                    <span class="badge badge-info">🌍 Painel Informativo</span>
+                    <h2>GeoPulse</h2>
+                    <p>Visualização artística baseada na sua localização geográfica real. Um globo 3D interativo que reage a país, cidade, coordenadas e fuso horário.</p>
+                    <div class="feature-list">
+                        <span class="feature-tag">📍 Geolocalização</span>
+                        <span class="feature-tag">🗺️ Globo 3D</span>
+                        <span class="feature-tag">🌐 apiip.net</span>
+                        <span class="feature-tag">✨ Partículas atmosféricas</span>
+                    </div>
+                    <a href="dashboard1/" class="btn btn-primary">Abrir GeoPulse →</a>
                 </div>
             </div>
 
-            <!-- Dashboard 2 -->
+            <!-- Dashboard 2 - Anime Gallery -->
             <div class="dashboard-card">
                 <div class="card-preview preview2"></div>
                 <div class="card-content">
                     <span class="badge badge-interactive">🎨 Painel Interativo</span>
-                    <h2>AI Canvas Lab</h2>
-                    <p>Gere imagens via API de IA (Pollinations.ai) e aplique filtros interativos em tempo real: pixels, distorções, glitch art e mais.</p>
-                    <a href="dashboard2/" class="btn btn-secondary">Abrir Dashboard →</a>
+                    <h2>Anime Gallery</h2>
+                    <p>Explore imagens de anime por categoria, aplique filtros em tempo real e manipule pixels com efeitos interativos como glitch, pixelate e distorção radial.</p>
+                    <div class="feature-list">
+                        <span class="feature-tag">📸 API com CORS ativo</span>
+                        <span class="feature-tag">🎨 16+ categorias</span>
+                        <span class="feature-tag">🌀 Filtros em tempo real</span>
+                        <span class="feature-tag">✨ Manipulação de pixels</span>
+                    </div>
+                    <a href="dashboard2/" class="btn btn-secondary">Abrir Anime Gallery →</a>
                 </div>
             </div>
         </div>
@@ -208,17 +296,26 @@
         <div class="info-section">
             <h3>📡 APIs Integradas</h3>
             <ul>
-                <li>🌌 NASA APOD (Astronomy Picture of the Day)</li>
-                <li>☀️ NASA Donki (Solar Wind / Clima Espacial)</li>
-                <li>🤖 Pollinations.ai (Text-to-Image API)</li>
+                <li>🌍 apiip.net - Geolocalização <span class="cors-badge">CORS ✓</span></li>
+                <li>🎨 Waifu.pics API - Imagens de Anime <span class="cors-badge">CORS ✓</span></li>
             </ul>
+            
+            <div class="api-detail">
+                <div>📌 <span>Dashboard 1 (GeoPulse):</span> API de geolocalização que detecta sua localização e cria uma visualização em globo 3D com partículas reativas.</div>
+                <div>📌 <span>Dashboard 2 (Anime Gallery):</span> API Waifu.pics - Selecione uma categoria (waifu, neko, hug, kiss, etc.) e receba imagens aleatórias de anime com 100% de confiabilidade e CORS habilitado [citation:2].</div>
+            </div>
+            
             <p style="margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
-                ⚡ Todas as APIs são gratuitas e não requerem chave pública sensível no código.
+                ⚡ Todas as APIs são gratuitas, têm CORS habilitado e não requerem chave de API.
+            </p>
+            <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #4a5568;">
+                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Pós-processamento interativo com manipulação de pixels
             </p>
         </div>
 
         <footer>
             <p>Projeto desenvolvido para a disciplina de Computação Orientada a Dados • Design de Interação / Multimédia • ISTEC</p>
+            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza apiip.net • Anime Gallery utiliza Waifu.pics API</p>
         </footer>
     </div>
 </body>
