@@ -1,9 +1,14 @@
 # MyDashboards - Dashboards Criativos com p5.js
 
-**Curso:** Design de Interação / Multimédia | ISTEC  
-**Disciplina:** Computação Orientada a Dados e Sistemas Interativos Web
+# Estrutura do Projeto
 
----
+MyDashboards/
+├── index.html              # Landing page principal
+├── README.md               # Documentação
+├── dashboard1/
+│   └── index.html          # GeoPulse (Geolocalização + Globo 3D)
+└── dashboard2/
+│   └── index.html          # AI Chatbot (Chat com robô p5.js)
 
 ## 🌟 Visão Geral
 
@@ -11,18 +16,18 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 
 | Dashboard | Tipo | API | Funcionalidade Principal |
 |-----------|------|-----|--------------------------|
-| **GeoPulse** | Painel Informativo | apiip.net | Geolocalização do usuário com globo 3D |
-| **Anime Gallery** | Painel Interativo | Waifu.pics API | Galeria de imagens de anime com filtros em tempo real |
+| **GeoPulse** | Painel Informativo | ipapi.co | Geolocalização do usuário com globo 3D |
+| **AI Chatbot** | Painel Interativo | SimpleBot API + Fallback | Chat com robô desenhado em p5.js |
 
 ---
 
 ## 📡 APIs Utilizadas
 
-### Dashboard 1 - GeoPulse (apiip.net)
+### Dashboard 1 - GeoPulse (ipapi.co)
 
 | Propriedade | Detalhe |
 |-------------|---------|
-| **Endpoint** | `https://apiip.net/api/check?accessKey=free` |
+| **Endpoint** | `https://ipapi.co/json/` |
 | **Método** | GET |
 | **CORS** | ✅ Habilitado |
 | **Autenticação** | Nenhuma (gratuita) |
@@ -33,21 +38,17 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 - Coordenadas → Cor do globo e partículas
 - Localização → Ponto destacado no globo 3D
 
-### Dashboard 2 - Anime Gallery (Waifu.pics API)
+### Dashboard 2 - AI Chatbot (SimpleBot API + Fallback)
 
 | Propriedade | Detalhe |
 |-------------|---------|
-| **Endpoint** | `https://api.waifu.pics/sfw/{categoria}` |
+| **Endpoint** | `https://api.simplebot.xyz/api/v1/chat` |
 | **Método** | GET |
 | **CORS** | ✅ Habilitado |
 | **Autenticação** | Nenhuma (gratuita) |
-| **Categorias disponíveis** | 16+ (waifu, neko, shinobu, megumin, bully, cuddle, cry, hug, awoo, kiss, lick, pat, smug, highfive, nom, bite) |
+| **Parâmetros** | `message` (texto do usuário), `botId=1` |
 
-**Interatividade oferecida:**
-- Seleção de categoria por dropdown
-- Busca de imagem aleatória
-- 7 filtros de pós-processamento
-- Controles de saturação, brilho e distorção radial
+**Fallback local:** O chatbot possui um sistema de respostas inteligentes para quando a API não está disponível, cobrindo 15+ categorias de perguntas.
 
 ---
 
@@ -65,33 +66,47 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 | ✅ Estrelas cintilantes | Fundo estelar com animação suave |
 | ✅ Design responsivo | Adapta-se a qualquer tamanho de ecrã |
 
-### Dashboard 2: Anime Gallery
+### Dashboard 2: AI Chatbot
 
 | Funcionalidade | Descrição |
 |----------------|-----------|
-| ✅ 16+ categorias | Waifu, Neko, Hug, Kiss, etc. |
-| ✅ Imagem aleatória | Busca API a cada clique |
-| ✅ 7 filtros interativos | Pixelate, Glitch, Invert, Threshold, Emboss, Edge Detection, Reset |
-| ✅ Distorção radial | Efeito de lente em tempo real |
-| ✅ Saturação | Controle deslizante (0-200%) |
-| ✅ Brilho | Controle deslizante (-100 a +100) |
-| ✅ Manipulação de pixels | Acesso direto ao array pixels[] do p5.js |
+| ✅ Robô desenhado com p5.js | Cabeça, olhos, boca, corpo e antenas com primitivas gráficas |
+| ✅ Expressões faciais | Feliz, triste, pensativo, normal (reagem ao contexto) |
+| ✅ Olhos animados | Piscam e seguem o mouse |
+| ✅ Chat em tempo real | Interface de conversa com avatares |
+| ✅ API SimpleBot | Comunicação com API de chatbot gratuita |
+| ✅ Fallback inteligente | 15+ respostas pré-definidas para quando a API falha |
+| ✅ Indicador de digitação | Animação "pensando" enquanto o robô processa |
+| ✅ Limpar conversa | Botão para resetar o histórico do chat |
 
 ---
 
-## 🎛️ Filtros Disponíveis (Dashboard 2)
+## 🤖 Respostas do Chatbot (Fallback Local)
 
-| Filtro | Efeito | Manipulação |
-|--------|--------|-------------|
-| **Pixelate** | Efeito de pixelização | Agrupamento de pixels em blocos |
-| **Glitch** | Efeito glitch art | Deslocamento aleatório de pixels |
-| **Inverter** | Negativo da imagem | Inversão de cores (255 - valor) |
-| **Limiar (B&W)** | Preto e branco | Threshold baseado em luminância |
-| **Relevo** | Efeito 3D/emboss | Diferença entre pixels vizinhos |
-| **Detecção Bordas** | Realce de contornos | Gradiente entre pixels adjacentes |
+| Palavra-chave | Resposta |
+|---------------|----------|
+| olá, oi, hey | Saudação amigável |
+| como estás, como vai | Resposta sobre estado do robô |
+| programação, código, p5 | Informação sobre p5.js |
+| obrigado, valeu | Agradecimento |
+| nome | Apresentação do robô |
+| ajuda, socorro | Oferecimento de ajuda |
+| tempo, clima | Informação sobre limitação |
+| tchau, adeus | Despedida |
+| piada, humor | Piada de programador |
+| *outros* | Resposta genérica encorajadora |
 
 ---
 
-### Acesso Online (GitHub Pages)
+## 🎛️ Design do Robô (p5.js)
+
+O robô é completamente desenhado com primitivas gráficas do p5.js:
+
+```javascript
+// Primitivas utilizadas:
+rect()     // Corpo e cabeça
+ellipse()  // Olhos e antenas
+arc()      // Boca (expressões)
+line()     // Antenas e detalhes
 
 https://pedrobabau.github.io/MyDashboards/
