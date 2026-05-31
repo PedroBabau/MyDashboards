@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyDashboards | GeoPulse + AI Chatbot</title>
+    <title>MyDashboards | GeoPulse + Car Gallery</title>
     <style>
         * {
             margin: 0;
@@ -107,7 +107,7 @@
         }
         
         .preview2::before {
-            content: "🤖";
+            content: "🏎️";
             position: absolute;
             font-size: 80px;
             bottom: 20px;
@@ -116,7 +116,7 @@
         }
         
         .preview2::after {
-            content: "💬";
+            content: "⚡";
             position: absolute;
             font-size: 50px;
             top: 20px;
@@ -287,20 +287,20 @@
                 </div>
             </div>
 
-            <!-- Dashboard 2 - AI Chatbot -->
+            <!-- Dashboard 2 - Car Gallery -->
             <div class="dashboard-card">
                 <div class="card-preview preview2"></div>
                 <div class="card-content">
-                    <span class="badge badge-interactive">🤖 Painel Interativo</span>
-                    <h2>AI Chatbot</h2>
-                    <p>Chat interativo com um robô desenhado em p5.js! O robô reage com expressões faciais enquanto conversa sobre tecnologia, programação e muito mais.</p>
+                    <span class="badge badge-interactive">🏎️ Painel Interativo</span>
+                    <h2>Car Gallery</h2>
+                    <p>API de imagens de carros (Unsplash + CORS proxy) + Carro desportivo decorativo desenhado em p5.js. Aplique filtros interativos como glitch, pixelate e distorção radial.</p>
                     <div class="feature-list">
-                        <span class="feature-tag">💬 Chat em tempo real</span>
-                        <span class="feature-tag">🤖 Robô com p5.js</span>
-                        <span class="feature-tag">😊 Expressões faciais</span>
-                        <span class="feature-tag">✨ API SimpleBot + Fallback</span>
+                        <span class="feature-tag">🚗 10+ marcas</span>
+                        <span class="feature-tag">📸 API com CORS ativo</span>
+                        <span class="feature-tag">🎨 Carro decorativo p5.js</span>
+                        <span class="feature-tag">🌀 Filtros em tempo real</span>
                     </div>
-                    <a href="dashboard2/" class="btn btn-secondary">Abrir AI Chatbot →</a>
+                    <a href="dashboard2/" class="btn btn-secondary">Abrir Car Gallery →</a>
                 </div>
             </div>
         </div>
@@ -309,25 +309,25 @@
             <h3>📡 APIs Integradas</h3>
             <ul>
                 <li>🌍 ipapi.co - Geolocalização <span class="cors-badge">CORS ✓</span></li>
-                <li>💬 SimpleBot API - Chatbot Inteligente <span class="cors-badge">CORS ✓</span></li>
+                <li>🏎️ Unsplash via CORS Proxy - Imagens de Carros <span class="cors-badge">CORS ✓</span></li>
             </ul>
             
             <div class="api-detail">
                 <div>📌 <span>Dashboard 1 (GeoPulse):</span> API ipapi.co - Detecta sua localização (país, cidade, IP, coordenadas, fuso horário) e cria uma visualização em globo 3D com partículas reativas.</div>
-                <div>📌 <span>Dashboard 2 (AI Chatbot):</span> SimpleBot API + Fallback local - Chat interativo com robô desenhado em p5.js que responde a perguntas sobre tecnologia, programação, e mantém conversas naturais.</div>
+                <div>📌 <span>Dashboard 2 (Car Gallery):</span> API Unsplash via CORS proxy - Busca imagens reais de carros por marca (Audi, BMW, Ferrari, etc.) + Carro desportivo decorativo desenhado com primitivas p5.js no canto inferior do canvas.</div>
             </div>
             
             <p style="margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
                 ⚡ Todas as APIs são gratuitas, têm CORS habilitado e não requerem chave de API.
             </p>
             <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #4a5568;">
-                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Interação em tempo real
+                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Pós-processamento interativo com manipulação de pixels
             </p>
         </div>
 
         <footer>
-            <p>Projeto de EMI, Engenharia Multimédia • ISTEC-Porto</p>
-            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza ipapi.co • AI Chatbot utiliza SimpleBot API</p>
+            <p>Projeto para EMI para Engenharia Multimédia • ISTEC</p>
+            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza ipapi.co • Car Gallery utiliza Unsplash + CORS Proxy</p>
         </footer>
     </div>
 </body>
