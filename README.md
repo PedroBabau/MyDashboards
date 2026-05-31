@@ -17,7 +17,7 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 | Dashboard | Tipo | API | Funcionalidade Principal |
 |-----------|------|-----|--------------------------|
 | **GeoPulse** | Painel Informativo | ipapi.co | Geolocalização do usuário com globo 3D |
-| **AI Chatbot** | Painel Interativo | SimpleBot API + Fallback | Chat com robô desenhado em p5.js |
+| **Car Gallery** | Painel Interativo | Unsplash + CORS Proxy | Imagens de carros por marca + Carro decorativo p5.js |
 
 ---
 
@@ -38,17 +38,20 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 - Coordenadas → Cor do globo e partículas
 - Localização → Ponto destacado no globo 3D
 
-### Dashboard 2 - AI Chatbot (SimpleBot API + Fallback)
+### Dashboard 2 - Car Gallery (Unsplash + CORS Proxy)
 
 | Propriedade | Detalhe |
 |-------------|---------|
-| **Endpoint** | `https://api.simplebot.xyz/api/v1/chat` |
+| **Endpoint** | `https://unsplash.com/napi/search/photos` (via CORS proxy) |
 | **Método** | GET |
-| **CORS** | ✅ Habilitado |
+| **CORS** | ✅ Habilitado (via proxy gratuito) |
 | **Autenticação** | Nenhuma (gratuita) |
-| **Parâmetros** | `message` (texto do usuário), `botId=1` |
+| **Marcas disponíveis** | Audi, BMW, Ferrari, Lamborghini, Porsche, Mercedes, Tesla, Ford Mustang, Chevrolet Camaro, Toyota Supra |
 
-**Fallback local:** O chatbot possui um sistema de respostas inteligentes para quando a API não está disponível, cobrindo 15+ categorias de perguntas.
+**Características:**
+- Busca imagens reais de carros da marca selecionada
+- Fallback com imagens SVG quando a API falha
+- Carro desportivo decorativo desenhado com primitivas p5.js (rect, ellipse, arc)
 
 ---
 
@@ -66,52 +69,33 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 | ✅ Estrelas cintilantes | Fundo estelar com animação suave |
 | ✅ Design responsivo | Adapta-se a qualquer tamanho de ecrã |
 
-### Dashboard 2: AI Chatbot
+### Dashboard 2: Car Gallery
 
 | Funcionalidade | Descrição |
 |----------------|-----------|
-| ✅ Robô desenhado com p5.js | Cabeça, olhos, boca, corpo e antenas com primitivas gráficas |
-| ✅ Expressões faciais | Feliz, triste, pensativo, normal (reagem ao contexto) |
-| ✅ Olhos animados | Piscam e seguem o mouse |
-| ✅ Chat em tempo real | Interface de conversa com avatares |
-| ✅ API SimpleBot | Comunicação com API de chatbot gratuita |
-| ✅ Fallback inteligente | 15+ respostas pré-definidas para quando a API falha |
-| ✅ Indicador de digitação | Animação "pensando" enquanto o robô processa |
-| ✅ Limpar conversa | Botão para resetar o histórico do chat |
+| ✅ 10+ marcas de carros | Audi, BMW, Ferrari, Lamborghini, Porsche, Mercedes, Tesla, Ford Mustang, Chevrolet Camaro, Toyota Supra |
+| ✅ API de imagens reais | Busca imagens via Unsplash (CORS ativo) |
+| ✅ Fallback SVG | Imagens de garantia quando a API falha |
+| ✅ Carro decorativo p5.js | Desenhado com rect(), ellipse(), arc() no canto inferior do canvas |
+| ✅ 7 filtros interativos | Pixelate, Glitch, Invert, Threshold, Emboss, Edge Detection, Reset |
+| ✅ Distorção radial | Efeito de lente em tempo real |
+| ✅ Saturação | Controle deslizante (0-200%) |
+| ✅ Brilho | Controle deslizante (-100 a +100) |
 
 ---
 
-## 🤖 Respostas do Chatbot (Fallback Local)
+## 🎛️ Filtros Disponíveis (Dashboard 2)
 
-| Palavra-chave | Resposta |
-|---------------|----------|
-| olá, oi, hey | Saudação amigável |
-| como estás, como vai | Resposta sobre estado do robô |
-| programação, código, p5 | Informação sobre p5.js |
-| obrigado, valeu | Agradecimento |
-| nome | Apresentação do robô |
-| ajuda, socorro | Oferecimento de ajuda |
-| tempo, clima | Informação sobre limitação |
-| tchau, adeus | Despedida |
-| piada, humor | Piada de programador |
-| *outros* | Resposta genérica encorajadora |
+| Filtro | Efeito | Manipulação |
+|--------|--------|-------------|
+| **Pixelate** | Efeito de pixelização | Agrupamento de pixels em blocos |
+| **Glitch** | Efeito glitch art | Deslocamento aleatório de pixels |
+| **Inverter** | Negativo da imagem | Inversão de cores (255 - valor) |
+| **Limiar (B&W)** | Preto e branco | Threshold baseado em luminância |
+| **Relevo** | Efeito 3D/emboss | Diferença entre pixels vizinhos |
+| **Detecção Bordas** | Realce de contornos | Gradiente entre pixels adjacentes |
 
 ---
 
-## 🎛️ Design do Robô (p5.js)
-
-O robô é completamente desenhado com primitivas gráficas do p5.js:
-
-```javascript
-// Primitivas utilizadas:
-rect()     // Corpo e cabeça
-ellipse()  // Olhos e antenas
-arc()      // Boca (expressões)
-line()     // Antenas e detalhes
-```
-
-## GitHub Page do Projeto
-
+### Acesso Online (GitHub Pages)
 https://pedrobabau.github.io/MyDashboards/
-
-###
