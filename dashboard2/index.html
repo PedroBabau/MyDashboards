@@ -3,246 +3,203 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot | Chat com Robô</title>
+    <title>Car Gallery | API de Carros + Carro Decorativo</title>
     <style>
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            user-select: none;
         }
         
         body {
-            background: linear-gradient(135deg, #0a0a2a, #1a1a3e, #0f172a);
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e);
+            font-family: 'Segoe UI', system-ui, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
         }
         
         .container {
-            max-width: 1300px;
-            width: 100%;
             display: flex;
             flex-wrap: wrap;
             gap: 25px;
+            max-width: 1400px;
+            width: 100%;
             justify-content: center;
         }
         
-        .robot-area {
-            flex: 1;
-            min-width: 350px;
-            background: rgba(15, 25, 45, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 30px;
-            padding: 25px;
+        .canvas-area {
+            flex: 1.2;
+            min-width: 450px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .robot-canvas {
-            background: #0f0f1a;
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 20px;
         }
         
         canvas {
             border-radius: 20px;
-            display: block;
-            margin: 0 auto;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            background: #0f0f1a;
+            cursor: pointer;
         }
         
-        .robot-status {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        
-        .status-led {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: #4ade80;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-        
-        .chat-area {
-            flex: 1.5;
-            min-width: 400px;
+        .controls {
+            flex: 1;
+            min-width: 320px;
             background: rgba(15, 25, 45, 0.95);
             backdrop-filter: blur(10px);
-            border-radius: 30px;
-            display: flex;
-            flex-direction: column;
-            height: 600px;
+            border-radius: 20px;
+            padding: 20px;
+            color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        .chat-header {
-            padding: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            border-radius: 30px 30px 0 0;
-        }
-        
-        .chat-header h2 {
-            color: white;
-            font-size: 1.3rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .chat-messages {
-            flex: 1;
-            padding: 20px;
+            height: fit-content;
+            max-height: 90vh;
             overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
         }
         
-        .message {
-            display: flex;
-            gap: 12px;
-            animation: fadeIn 0.3s ease;
+        .controls h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .controls p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
         }
         
-        .message.user {
-            justify-content: flex-end;
+        .input-group {
+            margin-bottom: 20px;
         }
         
-        .message.bot {
-            justify-content: flex-start;
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #cbd5e1;
         }
         
-        .message-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-        }
-        
-        .message.user .message-avatar {
-            background: #3b82f6;
-            order: 2;
-        }
-        
-        .message.bot .message-avatar {
-            background: #8b5cf6;
-        }
-        
-        .message-content {
-            max-width: 70%;
-            padding: 12px 16px;
-            border-radius: 18px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        
-        .message.user .message-content {
-            background: #3b82f6;
-            color: white;
-            border-radius: 18px 18px 4px 18px;
-        }
-        
-        .message.bot .message-content {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-radius: 18px 18px 18px 4px;
-            border: 1px solid #334155;
-        }
-        
-        .typing-indicator {
-            display: flex;
-            gap: 5px;
-            padding: 12px 16px;
-            background: #1e293b;
-            border-radius: 18px;
-            width: fit-content;
-            border: 1px solid #334155;
-        }
-        
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #94a3b8;
-            animation: typing 1.4s infinite;
-        }
-        
-        .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-        .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-        
-        @keyframes typing {
-            0%, 60%, 100% { transform: translateY(0); opacity: 0.5; }
-            30% { transform: translateY(-8px); opacity: 1; }
-        }
-        
-        .chat-input-area {
-            padding: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            gap: 12px;
-        }
-        
-        .chat-input-area input {
-            flex: 1;
-            padding: 12px 18px;
-            border-radius: 25px;
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
             border: 1px solid #334155;
             background: #1e293b;
             color: white;
             font-size: 14px;
-            outline: none;
-            transition: all 0.3s;
+            cursor: pointer;
         }
         
-        .chat-input-area input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
-        }
-        
-        .chat-input-area button {
-            padding: 12px 24px;
-            border-radius: 25px;
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
             border: none;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s;
+            margin-bottom: 15px;
+            font-size: 16px;
         }
         
-        .chat-input-area button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.4);
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
         }
         
-        .clear-btn {
-            background: #ef4444 !important;
+        .filter-section {
+            border-top: 1px solid #334155;
+            padding-top: 20px;
+            margin-top: 10px;
         }
         
-        .clear-btn:hover {
-            box-shadow: 0 5px 15px rgba(239, 68, 68, 0.4) !important;
+        .filter-section h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #ff6b6b;
+        }
+        
+        .filter-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-btn {
+            background: #334155;
+            padding: 8px;
+            font-size: 12px;
+            margin-bottom: 0;
+        }
+        
+        .filter-btn:hover {
+            background: #475569;
+            transform: none;
+        }
+        
+        input[type="range"] {
+            width: 100%;
+            padding: 0;
+            margin: 10px 0;
+        }
+        
+        .value-display {
+            display: inline-block;
+            background: #1e293b;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+            margin-left: 8px;
+        }
+        
+        .status {
+            background: #0f172a;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 12px;
+            text-align: center;
+            color: #94a3b8;
+        }
+        
+        .status.loading {
+            color: #fbbf24;
+            animation: pulse 1s infinite;
+        }
+        
+        .status.success {
+            color: #4ade80;
+        }
+        
+        .status.error {
+            color: #f87171;
+        }
+        
+        .car-info {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 11px;
+            border-left: 3px solid #ff6b6b;
+            text-align: center;
+        }
+        
+        .car-info span {
+            color: #ffaa66;
+            font-weight: bold;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6;
         }
         
         ::-webkit-scrollbar {
@@ -255,281 +212,508 @@
         }
         
         ::-webkit-scrollbar-thumb {
-            background: #3b82f6;
+            background: #ff6b6b;
             border-radius: 3px;
         }
         
         @media (max-width: 900px) {
-            .robot-area { min-width: 300px; }
-            .chat-area { min-width: 350px; }
+            .canvas-area { min-width: 350px; }
+            canvas { width: 100%; height: auto; }
+            .controls { min-width: 280px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <div class="robot-area">
-            <div class="robot-canvas">
-                <div id="robotCanvas"></div>
-            </div>
-            <div class="robot-status">
-                <div class="status-led"></div>
-                <span style="color: #94a3b8; font-size: 12px;">IA Online | Modo Conversa</span>
-            </div>
-            <p style="color: #64748b; font-size: 11px; margin-top: 15px;">
-                🤖 Robô desenhado com p5.js - Olhos e expressões reagem à conversa
-            </p>
+        <div class="canvas-area">
+            <div id="p5canvas"></div>
         </div>
-        
-        <div class="chat-area">
-            <div class="chat-header">
-                <h2>
-                    <span>🤖</span> AI Assistant
-                    <span style="font-size: 12px; font-weight: normal; margin-left: auto;">powered by SimpleBot API</span>
-                </h2>
+        <div class="controls">
+            <h2>🏎️ Car Gallery</h2>
+            <p>API de Imagens de Carros + Carro Decorativo (p5.js)</p>
+            
+            <div class="input-group">
+                <label>🚗 Marca do Carro</label>
+                <select id="brand">
+                    <option value="audi">Audi</option>
+                    <option value="bmw">BMW</option>
+                    <option value="ferrari">Ferrari</option>
+                    <option value="lamborghini">Lamborghini</option>
+                    <option value="porsche">Porsche</option>
+                    <option value="mercedes">Mercedes-Benz</option>
+                    <option value="tesla">Tesla</option>
+                    <option value="ford">Ford Mustang</option>
+                    <option value="chevrolet">Chevrolet Camaro</option>
+                    <option value="toyota">Toyota Supra</option>
+                </select>
             </div>
             
-            <div class="chat-messages" id="chatMessages">
-                <div class="message bot">
-                    <div class="message-avatar">🤖</div>
-                    <div class="message-content">
-                        Olá! Eu sou o Assistente IA. Como posso ajudar você hoje?<br>
-                        <span style="font-size: 10px; color: #94a3b8;">Pergunte sobre tecnologia, programação, ou converse normalmente!</span>
-                    </div>
+            <button id="fetchBtn">🔍 Buscar Imagem do Carro</button>
+            
+            <div class="car-info" id="carInfo">
+                <span>🏎️ Marca selecionada:</span> <span id="selectedBrand">Audi</span><br>
+                <span>📸</span> A imagem será carregada da API (CORS ativo)
+            </div>
+            
+            <div class="filter-section">
+                <h3>🎛️ Pós-Processamento Interativo</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn" data-filter="pixelate">Pixelate</button>
+                    <button class="filter-btn" data-filter="glitch">Glitch Art</button>
+                    <button class="filter-btn" data-filter="invert">Inverter Cores</button>
+                    <button class="filter-btn" data-filter="threshold">Limiar (B&W)</button>
+                    <button class="filter-btn" data-filter="emboss">Relevo</button>
+                    <button class="filter-btn" data-filter="edges">Detecção Bordas</button>
+                    <button class="filter-btn" data-filter="reset">Resetar</button>
+                </div>
+                
+                <div class="input-group">
+                    <label>🌀 Distorção Radial <span id="radialVal" class="value-display">0</span></label>
+                    <input type="range" id="radialDistort" min="0" max="100" value="0" step="1">
+                </div>
+                
+                <div class="input-group">
+                    <label>🌈 Saturação <span id="satVal" class="value-display">100%</span></label>
+                    <input type="range" id="saturation" min="0" max="200" value="100" step="1">
+                </div>
+                
+                <div class="input-group">
+                    <label>🔆 Brilho <span id="brightVal" class="value-display">0</span></label>
+                    <input type="range" id="brightness" min="-100" max="100" value="0" step="1">
                 </div>
             </div>
             
-            <div class="chat-input-area">
-                <input type="text" id="messageInput" placeholder="Digite sua mensagem..." autocomplete="off">
-                <button id="sendBtn">📤 Enviar</button>
-                <button id="clearBtn" class="clear-btn">🗑️ Limpar</button>
+            <div class="status" id="status">
+                💡 Selecione uma marca e clique em "Buscar Imagem do Carro"!
             </div>
         </div>
     </div>
-
+    
     <script>
-        let eyeX = 0, eyeY = 0;
-        let expression = "normal";
-        let blinkTimer = 0;
-        let isTyping = false;
+        let currentImage = null;
+        let originalPixels = null;
+        let currentFilter = 'none';
+        let radialAmount = 0;
+        let saturationAmount = 100;
+        let brightnessAmount = 0;
+        let currentBrand = "audi";
+        
+        // Mapeamento de marcas para termos de busca na API
+        const brandSearchTerms = {
+            audi: "Audi R8",
+            bmw: "BMW M4",
+            ferrari: "Ferrari F8",
+            lamborghini: "Lamborghini Huracan",
+            porsche: "Porsche 911",
+            mercedes: "Mercedes AMG GT",
+            tesla: "Tesla Model S",
+            ford: "Ford Mustang GT",
+            chevrolet: "Chevrolet Camaro",
+            toyota: "Toyota Supra"
+        };
+        
+        // API de imagens - ImgFlip (memes de carros, CORS ativo)
+        // Fallback: Unsplash via proxy CORS gratuito
+        
+        async function fetchCarImage() {
+            currentBrand = select('#brand').value();
+            let brandName = select('#brand').options[select('#brand').selectedIndex].text;
+            let statusDiv = select('#status');
+            
+            select('#selectedBrand').html(brandName);
+            
+            statusDiv.html('🏎️ Buscando imagem... ⏳');
+            statusDiv.removeClass('success').removeClass('error').addClass('loading');
+            
+            // Tentativa 1: API do Unsplash via proxy CORS (gratuito e confiável)
+            let searchTerm = brandSearchTerms[currentBrand];
+            let proxyUrl = 'https://corsproxy.io/?';
+            let unsplashUrl = `https://unsplash.com/napi/search/photos?query=${encodeURIComponent(searchTerm + " car")}&per_page=20`;
+            
+            try {
+                // Usando CORS proxy gratuito
+                let response = await fetch(proxyUrl + encodeURIComponent(unsplashUrl), {
+                    headers: { 'Accept': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data && data.results && data.results.length > 0) {
+                        // Escolher uma imagem aleatória dos resultados
+                        let randomIndex = Math.floor(Math.random() * Math.min(data.results.length, 10));
+                        let imageUrl = data.results[randomIndex].urls.regular;
+                        loadImage(imageUrl, 
+                            (img) => {
+                                displayImage(img, statusDiv);
+                            },
+                            () => {
+                                useFallbackImage(statusDiv);
+                            }
+                        );
+                        return;
+                    }
+                }
+                throw new Error('API falhou');
+            } catch (error) {
+                console.log('Unsplash via proxy falhou, tentando fallback...', error);
+                useFallbackImage(statusDiv);
+            }
+        }
+        
+        function useFallbackImage(statusDiv) {
+            // Fallback: imagens SVG de carros (garantidas, sem rede)
+            let fallbackImages = {
+                audi: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%231a2a4a'/%3E%3Crect x='80' y='100' width='240' height='80' rx='15' fill='%230064ff'/%3E%3Crect x='130' y='70' width='140' height='40' rx='8' fill='%234477cc'/%3E%3Ccircle cx='140' cy='200' r='25' fill='%23222222'/%3E%3Ccircle cx='260' cy='200' r='25' fill='%23222222'/%3E%3Ctext x='200' y='145' text-anchor='middle' fill='white' font-size='24' font-family='monospace'%3EAUDI%3C/text%3E%3C/svg%3E",
+                bmw: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%231a2a4a'/%3E%3Crect x='80' y='100' width='240' height='80' rx='15' fill='%2300aaff'/%3E%3Crect x='130' y='70' width='140' height='40' rx='8' fill='%230088cc'/%3E%3Ccircle cx='140' cy='200' r='25' fill='%23222222'/%3E%3Ccircle cx='260' cy='200' r='25' fill='%23222222'/%3E%3Ctext x='200' y='145' text-anchor='middle' fill='white' font-size='24' font-family='monospace'%3EBMW%3C/text%3E%3C/svg%3E",
+                ferrari: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%231a2a4a'/%3E%3Crect x='80' y='100' width='240' height='80' rx='15' fill='%23ff3300'/%3E%3Crect x='130' y='70' width='140' height='40' rx='8' fill='%23cc2200'/%3E%3Ccircle cx='140' cy='200' r='25' fill='%23222222'/%3E%3Ccircle cx='260' cy='200' r='25' fill='%23222222'/%3E%3Ctext x='200' y='145' text-anchor='middle' fill='yellow' font-size='20' font-family='monospace'%3EFERRARI%3C/text%3E%3C/svg%3E",
+                lamborghini: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 250'%3E%3Crect width='400' height='250' fill='%231a2a4a'/%3E%3Crect x='80' y='100' width='240' height='80' rx='15' fill='%23ffcc00'/%3E%3Crect x='130' y='70' width='140' height='40' rx='8' fill='%23cc9900'/%3E%3Ccircle cx='140' cy='200' r='25' fill='%23222222'/%3E%3Ccircle cx='260' cy='200' r='25' fill='%23222222'/%3E%3Ctext x='200' y='145' text-anchor='middle' fill='black' font-size='18' font-family='monospace'%3ELAMBORGHINI%3C/text%3E%3C/svg%3E"
+            };
+            
+            let fallbackSvg = fallbackImages[currentBrand] || fallbackImages.audi;
+            loadImage(fallbackSvg, 
+                (img) => {
+                    displayImage(img, statusDiv);
+                    statusDiv.html('⚠️ Modo Demo - Imagem SVG de fallback');
+                },
+                () => {
+                    statusDiv.html('❌ Erro total. Tente recarregar.');
+                    statusDiv.removeClass('loading').addClass('error');
+                }
+            );
+        }
+        
+        function displayImage(img, statusDiv) {
+            currentImage = img;
+            if (currentImage.width !== width || currentImage.height !== height) {
+                currentImage.resize(width, height);
+            }
+            
+            currentImage.loadPixels();
+            originalPixels = [...currentImage.pixels];
+            
+            statusDiv.html('✅ Imagem carregada! Use os filtros abaixo.');
+            statusDiv.removeClass('loading').addClass('success');
+            
+            // Resetar efeitos
+            currentFilter = 'none';
+            radialAmount = 0;
+            saturationAmount = 100;
+            brightnessAmount = 0;
+            select('#radialDistort').value(0);
+            select('#saturation').value(100);
+            select('#brightness').value(0);
+            select('#radialVal').html('0');
+            select('#satVal').html('100%');
+            select('#brightVal').html('0');
+            
+            // Desenhar no canvas principal
+            drawCarOnCanvas();
+        }
+        
+        function drawCarOnCanvas() {
+            if (!currentImage) return;
+            
+            // Criar um buffer para combinar a imagem do carro com o carro decorativo
+            let buffer = createGraphics(width, height);
+            
+            // Desenhar a imagem do carro
+            buffer.image(currentImage, 0, 0, width, height);
+            
+            // Desenhar o carro decorativo p5.js no canto inferior direito
+            drawDecorativeCar(buffer);
+            
+            // Atualizar a imagem principal
+            carImage = buffer.get();
+            carImage.loadPixels();
+            originalPixels = [...carImage.pixels];
+            image(carImage, 0, 0);
+        }
+        
+        function drawDecorativeCar(g) {
+            // Carro desportivo decorativo (apenas estilístico)
+            g.push();
+            
+            // Posição: canto inferior direito
+            let carX = g.width - 140;
+            let carY = g.height - 100;
+            
+            // Sombra
+            g.fill(0, 0, 0, 80);
+            g.noStroke();
+            g.ellipse(carX + 50, carY + 35, 100, 15);
+            
+            // Corpo principal
+            g.fill(255, 100, 50);
+            g.rect(carX, carY, 100, 40, 10);
+            
+            // Teto
+            g.fill(200, 70, 30);
+            g.rect(carX + 25, carY - 15, 50, 20, 8);
+            
+            // Janelas
+            g.fill(100, 150, 200);
+            g.rect(carX + 30, carY - 12, 18, 12, 3);
+            g.rect(carX + 52, carY - 12, 18, 12, 3);
+            
+            // Rodas
+            g.fill(30, 30, 30);
+            g.ellipse(carX + 25, carY + 35, 25, 25);
+            g.ellipse(carX + 75, carY + 35, 25, 25);
+            g.fill(80, 80, 90);
+            g.ellipse(carX + 25, carY + 35, 15, 15);
+            g.ellipse(carX + 75, carY + 35, 15, 15);
+            
+            // Faróis
+            g.fill(255, 255, 150);
+            g.ellipse(carX + 95, carY + 20, 10, 8);
+            g.fill(255, 100, 50);
+            g.ellipse(carX + 5, carY + 20, 10, 8);
+            
+            // Spoiler
+            g.fill(200, 70, 30);
+            g.rect(carX + 20, carY - 22, 60, 6, 3);
+            
+            // Detalhe da marca
+            g.fill(255, 215, 0);
+            g.ellipse(carX + 50, carY + 20, 12, 12);
+            g.fill(0);
+            g.ellipse(carX + 50, carY + 20, 6, 6);
+            
+            g.pop();
+        }
+        
+        function resetImage() {
+            if (!originalPixels || !carImage) return;
+            
+            carImage.loadPixels();
+            for (let i = 0; i < originalPixels.length; i++) {
+                carImage.pixels[i] = originalPixels[i];
+            }
+            carImage.updatePixels();
+            image(carImage, 0, 0);
+            
+            radialAmount = 0;
+            saturationAmount = 100;
+            brightnessAmount = 0;
+            currentFilter = 'none';
+            select('#radialDistort').value(0);
+            select('#saturation').value(100);
+            select('#brightness').value(0);
+            select('#radialVal').html('0');
+            select('#satVal').html('100%');
+            select('#brightVal').html('0');
+        }
+        
+        function applyFilters() {
+            if (!carImage || !originalPixels) return;
+            
+            carImage.loadPixels();
+            for (let i = 0; i < originalPixels.length; i++) {
+                carImage.pixels[i] = originalPixels[i];
+            }
+            
+            if (currentFilter !== 'none') {
+                applyPixelFilter();
+            }
+            
+            applyColorAdjustments();
+            
+            if (radialAmount > 0) {
+                applyRadialDistortion();
+            }
+            
+            carImage.updatePixels();
+            image(carImage, 0, 0);
+        }
+        
+        function applyPixelFilter() {
+            carImage.loadPixels();
+            
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    let idx = (y * width + x) * 4;
+                    let r = carImage.pixels[idx];
+                    let g = carImage.pixels[idx + 1];
+                    let b = carImage.pixels[idx + 2];
+                    
+                    switch(currentFilter) {
+                        case 'pixelate':
+                            let pixelSize = 8;
+                            let px = floor(x / pixelSize) * pixelSize;
+                            let py = floor(y / pixelSize) * pixelSize;
+                            let pIdx = (py * width + px) * 4;
+                            carImage.pixels[idx] = carImage.pixels[pIdx];
+                            carImage.pixels[idx + 1] = carImage.pixels[pIdx + 1];
+                            carImage.pixels[idx + 2] = carImage.pixels[pIdx + 2];
+                            break;
+                            
+                        case 'glitch':
+                            if (random(1) < 0.05) {
+                                let offset = int(random(-20, 20));
+                                let newIdx = idx + offset * 4;
+                                if (newIdx >= 0 && newIdx < carImage.pixels.length - 3) {
+                                    carImage.pixels[idx] = carImage.pixels[newIdx];
+                                    carImage.pixels[idx + 1] = carImage.pixels[newIdx + 1];
+                                    carImage.pixels[idx + 2] = carImage.pixels[newIdx + 2];
+                                }
+                            }
+                            break;
+                            
+                        case 'invert':
+                            carImage.pixels[idx] = 255 - r;
+                            carImage.pixels[idx + 1] = 255 - g;
+                            carImage.pixels[idx + 2] = 255 - b;
+                            break;
+                            
+                        case 'threshold':
+                            let gray = (r + g + b) / 3;
+                            let val = gray > 127 ? 255 : 0;
+                            carImage.pixels[idx] = val;
+                            carImage.pixels[idx + 1] = val;
+                            carImage.pixels[idx + 2] = val;
+                            break;
+                            
+                        case 'emboss':
+                            if (x > 0 && y > 0) {
+                                let prevIdx = ((y-1) * width + (x-1)) * 4;
+                                let dr = r - carImage.pixels[prevIdx];
+                                let dg = g - carImage.pixels[prevIdx + 1];
+                                let db = b - carImage.pixels[prevIdx + 2];
+                                carImage.pixels[idx] = constrain(128 + dr, 0, 255);
+                                carImage.pixels[idx + 1] = constrain(128 + dg, 0, 255);
+                                carImage.pixels[idx + 2] = constrain(128 + db, 0, 255);
+                            }
+                            break;
+                            
+                        case 'edges':
+                            if (x > 0 && x < width-1 && y > 0 && y < height-1) {
+                                let rightIdx = (y * width + (x+1)) * 4;
+                                let bottomIdx = ((y+1) * width + x) * 4;
+                                let edgeR = abs(r - carImage.pixels[rightIdx]) + abs(r - carImage.pixels[bottomIdx]);
+                                let edgeG = abs(g - carImage.pixels[rightIdx+1]) + abs(g - carImage.pixels[bottomIdx+1]);
+                                let edgeB = abs(b - carImage.pixels[rightIdx+2]) + abs(b - carImage.pixels[bottomIdx+2]);
+                                let edge = constrain((edgeR + edgeG + edgeB) / 3, 0, 255);
+                                carImage.pixels[idx] = edge;
+                                carImage.pixels[idx+1] = edge;
+                                carImage.pixels[idx+2] = edge;
+                            }
+                            break;
+                    }
+                }
+            }
+            carImage.updatePixels();
+        }
+        
+        function applyColorAdjustments() {
+            carImage.loadPixels();
+            
+            for (let i = 0; i < carImage.pixels.length; i += 4) {
+                let r = carImage.pixels[i];
+                let g = carImage.pixels[i + 1];
+                let b = carImage.pixels[i + 2];
+                
+                let gray = (r + g + b) / 3;
+                let satFactor = saturationAmount / 100;
+                let newR = gray + (r - gray) * satFactor;
+                let newG = gray + (g - gray) * satFactor;
+                let newB = gray + (b - gray) * satFactor;
+                
+                carImage.pixels[i] = constrain(newR + brightnessAmount, 0, 255);
+                carImage.pixels[i + 1] = constrain(newG + brightnessAmount, 0, 255);
+                carImage.pixels[i + 2] = constrain(newB + brightnessAmount, 0, 255);
+            }
+            carImage.updatePixels();
+        }
+        
+        function applyRadialDistortion() {
+            if (radialAmount === 0) return;
+            
+            carImage.loadPixels();
+            let distorted = new Array(carImage.pixels.length);
+            let centerX = width / 2;
+            let centerY = height / 2;
+            let maxRadius = dist(0, 0, centerX, centerY);
+            let strength = radialAmount / 50;
+            
+            for (let y = 0; y < height; y++) {
+                for (let x = 0; x < width; x++) {
+                    let dx = x - centerX;
+                    let dy = y - centerY;
+                    let radius = dist(x, y, centerX, centerY);
+                    
+                    let factor = 1 + strength * (radius / maxRadius);
+                    let newX = centerX + dx * factor;
+                    let newY = centerY + dy * factor;
+                    
+                    let srcX = floor(newX);
+                    let srcY = floor(newY);
+                    
+                    if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
+                        let srcIdx = (srcY * width + srcX) * 4;
+                        let dstIdx = (y * width + x) * 4;
+                        distorted[dstIdx] = carImage.pixels[srcIdx];
+                        distorted[dstIdx + 1] = carImage.pixels[srcIdx + 1];
+                        distorted[dstIdx + 2] = carImage.pixels[srcIdx + 2];
+                    }
+                }
+            }
+            
+            for (let i = 0; i < distorted.length; i++) {
+                if (distorted[i] !== undefined) carImage.pixels[i] = distorted[i];
+            }
+            carImage.updatePixels();
+        }
         
         function setup() {
-            let canvas = createCanvas(300, 300);
-            canvas.parent('robotCanvas');
+            let canvas = createCanvas(500, 400);
+            canvas.parent('p5canvas');
+            background(20);
             
-            let sendBtn = select('#sendBtn');
-            let clearBtn = select('#clearBtn');
-            let messageInput = select('#messageInput');
+            textAlign(CENTER, CENTER);
+            fill(150);
+            textSize(14);
+            text("🏎️ Selecione uma marca\n e clique em 'Buscar Imagem'", width/2, height/2);
             
-            sendBtn.mousePressed(sendMessage);
-            clearBtn.mousePressed(clearChat);
-            messageInput.elt.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
+            // Event listeners
+            select('#fetchBtn').mousePressed(() => {
+                fetchCarImage().then(() => {
+                    if (currentImage) drawCarOnCanvas();
+                });
             });
             
-            setInterval(() => {
-                if (expression !== "thinking") {
-                    eyeX = random(-5, 5);
-                    eyeY = random(-5, 5);
-                }
-            }, 3000);
+            selectAll('.filter-btn').forEach(btn => {
+                btn.mousePressed(() => {
+                    currentFilter = btn.elt.dataset.filter;
+                    if (currentFilter === 'reset') {
+                        resetImage();
+                    } else {
+                        applyFilters();
+                    }
+                });
+            });
             
-            setInterval(() => {
-                blinkTimer = 5;
-            }, 4000);
+            select('#radialDistort').input(() => {
+                radialAmount = int(select('#radialDistort').value());
+                select('#radialVal').html(radialAmount);
+                applyFilters();
+            });
+            
+            select('#saturation').input(() => {
+                saturationAmount = int(select('#saturation').value());
+                select('#satVal').html(saturationAmount + '%');
+                applyFilters();
+            });
+            
+            select('#brightness').input(() => {
+                brightnessAmount = int(select('#brightness').value());
+                select('#brightVal').html(brightnessAmount);
+                applyFilters();
+            });
         }
         
         function draw() {
-            background(15, 15, 26);
-            
-            push();
-            translate(width/2, height/2 - 20);
-            
-            fill(30, 41, 59);
-            stroke(59, 130, 246);
-            strokeWeight(2);
-            rect(-60, 40, 120, 100, 15);
-            
-            fill(30, 41, 59);
-            rect(-70, -60, 140, 120, 25);
-            
-            blinkTimer--;
-            let eyeSize = 25;
-            let eyeOpen = blinkTimer <= 0;
-            
-            fill(20, 30, 50);
-            ellipse(-30, -25, eyeSize, eyeSize);
-            fill(255);
-            ellipse(-30 + eyeX, -25 + eyeY, 12, eyeOpen ? 12 : 2);
-            fill(0);
-            ellipse(-30 + eyeX, -25 + eyeY, 6, eyeOpen ? 6 : 2);
-            
-            fill(20, 30, 50);
-            ellipse(30, -25, eyeSize, eyeSize);
-            fill(255);
-            ellipse(30 + eyeX, -25 + eyeY, 12, eyeOpen ? 12 : 2);
-            fill(0);
-            ellipse(30 + eyeX, -25 + eyeY, 6, eyeOpen ? 6 : 2);
-            
-            stroke(59, 130, 246);
-            strokeWeight(3);
-            noFill();
-            
-            if (expression === "happy") {
-                arc(0, 10, 50, 30, 0, PI);
-            } else if (expression === "sad") {
-                arc(0, 10, 50, 30, PI, TWO_PI);
-            } else if (expression === "thinking") {
-                for (let x = -25; x <= 25; x += 5) {
-                    point(x, 10 + sin(x * 0.5 + millis() * 0.01) * 5);
-                }
-            } else {
-                line(-25, 10, 25, 10);
-            }
-            
-            stroke(59, 130, 246);
-            strokeWeight(3);
-            line(-20, -60, -20, -85);
-            line(20, -60, 20, -85);
-            fill(59, 130, 246);
-            noStroke();
-            ellipse(-20, -90, 10, 10);
-            ellipse(20, -90, 10, 10);
-            
-            if (isTyping || expression === "thinking") {
-                fill(255, 200, 0);
-                ellipse(-20, -90, 6, 6);
-                ellipse(20, -90, 6, 6);
-            } else {
-                fill(59, 130, 246);
-                ellipse(-20, -90, 6, 6);
-                ellipse(20, -90, 6, 6);
-            }
-            
-            fill(59, 130, 246, 100);
-            rect(-40, 55, 80, 10, 5);
-            rect(-30, 75, 60, 8, 4);
-            
-            pop();
-        }
-        
-        async function sendMessage() {
-            let input = select('#messageInput');
-            let message = input.value().trim();
-            
-            if (message === "") return;
-            
-            addMessage(message, 'user');
-            input.value('');
-            
-            isTyping = true;
-            expression = "thinking";
-            showTypingIndicator();
-            
-            try {
-                let response = await fetch(`https://api.simplebot.xyz/api/v1/chat?message=${encodeURIComponent(message)}&botId=1`);
-                let data = await response.json();
-                
-                if (data && data.response) {
-                    addMessage(data.response, 'bot');
-                } else {
-                    addMessage("Desculpe, não consegui processar sua mensagem. Pode tentar novamente?", 'bot');
-                }
-            } catch (error) {
-                console.error('Erro na API:', error);
-                let localResponse = getLocalResponse(message);
-                addMessage(localResponse, 'bot');
-            }
-            
-            removeTypingIndicator();
-            isTyping = false;
-            expression = "happy";
-            setTimeout(() => {
-                expression = "normal";
-            }, 2000);
-        }
-        
-        function getLocalResponse(message) {
-            let msg = message.toLowerCase();
-            
-            if (msg.includes('olá') || msg.includes('oi') || msg.includes('hey')) {
-                return "Olá! Como posso ajudar você hoje? 😊";
-            } else if (msg.includes('como estás') || msg.includes('como vai')) {
-                return "Estou funcionando perfeitamente! Obrigado por perguntar. E você? 🤖";
-            } else if (msg.includes('programação') || msg.includes('código') || msg.includes('p5')) {
-                return "Adoro programação! Este dashboard foi feito com p5.js. Quer saber mais sobre? 💻";
-            } else if (msg.includes('obrigado') || msg.includes('valeu')) {
-                return "De nada! Fico feliz em ajudar. 🎉";
-            } else if (msg.includes('tempo') || msg.includes('clima')) {
-                return "Não tenho acesso a dados meteorológicos agora, mas posso conversar sobre outros assuntos! 🌤️";
-            } else if (msg.includes('nome')) {
-                return "Sou o Assistente IA do seu dashboard! Fui criado com p5.js e API de chatbot. 🤖";
-            } else if (msg.includes('ajuda') || msg.includes('socorro')) {
-                return "Claro! Posso ajudar com informações, conversar ou apenas ouvir. O que você precisa? 🆘";
-            } else if (msg.includes('tchau') || msg.includes('adeus') || msg.includes('até logo')) {
-                return "Até logo! Foi um prazer conversar com você. Volte sempre! 👋";
-            } else if (msg.includes('piada') || msg.includes('humor')) {
-                return "Por que o programador foi ao médico? Porque ele tinha muitos 'bytes'! 😂";
-            } else {
-                return "Interessante! Conte-me mais sobre isso. Estou aqui para aprender e conversar com você. 🗣️";
-            }
-        }
-        
-        function addMessage(text, sender) {
-            let messagesDiv = select('#chatMessages');
-            
-            let messageDiv = createDiv('');
-            messageDiv.addClass('message');
-            messageDiv.addClass(sender);
-            
-            let avatar = createDiv('');
-            avatar.addClass('message-avatar');
-            avatar.html(sender === 'user' ? '👤' : '🤖');
-            
-            let content = createDiv('');
-            content.addClass('message-content');
-            content.html(text);
-            
-            messageDiv.child(avatar);
-            messageDiv.child(content);
-            messagesDiv.child(messageDiv);
-            
-            messagesDiv.elt.scrollTop = messagesDiv.elt.scrollHeight;
-        }
-        
-        function showTypingIndicator() {
-            let messagesDiv = select('#chatMessages');
-            removeTypingIndicator();
-            
-            let typingDiv = createDiv('');
-            typingDiv.id('typingIndicator');
-            typingDiv.addClass('message');
-            typingDiv.addClass('bot');
-            
-            let avatar = createDiv('');
-            avatar.addClass('message-avatar');
-            avatar.html('🤖');
-            
-            let indicator = createDiv('');
-            indicator.addClass('typing-indicator');
-            indicator.html('<span></span><span></span><span></span>');
-            
-            typingDiv.child(avatar);
-            typingDiv.child(indicator);
-            messagesDiv.child(typingDiv);
-            messagesDiv.elt.scrollTop = messagesDiv.elt.scrollHeight;
-        }
-        
-        function removeTypingIndicator() {
-            let indicator = select('#typingIndicator');
-            if (indicator) indicator.remove();
-        }
-        
-        function clearChat() {
-            let messagesDiv = select('#chatMessages');
-            messagesDiv.html('');
-            
-            addMessage("Olá! Eu sou o Assistente IA. Como posso ajudar você hoje?\n\nPergunte sobre tecnologia, programação, ou converse normalmente!", 'bot');
+            // O desenho é feito nos callbacks
         }
     </script>
 </body>
