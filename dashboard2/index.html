@@ -289,17 +289,16 @@
     </div>
     
     <script>
+        // Variáveis globais
         let currentImage = null;
         let originalPixels = null;
         let currentFilter = 'none';
         let radialAmount = 0;
         let saturationAmount = 100;
         let brightnessAmount = 0;
-        let currentBrand = "audi";
         
-        // URLs de imagens de carros (CDN - imagens diretas e confiáveis)
-        // Usei imagens do CDN do Unsplash (diretas, sem CORS)
-        const carImagesDirect = {
+        // URLs de imagens de carros (CDN - imagens diretas)
+        const carImages = {
             audi: "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=500&h=400&fit=crop",
             bmw: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&h=400&fit=crop",
             ferrari: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=500&h=400&fit=crop",
@@ -310,20 +309,20 @@
             ford: "https://images.unsplash.com/photo-1580939583459-5e4f7d6ea5b6?w=500&h=400&fit=crop"
         };
         
-        // Fallback SVG (caso as imagens não carreguem)
+        // Fallback SVG para cada marca
         function getFallbackSVG(brand) {
-            const colors = {
-                audi: { main: "#0066cc", text: "AUDI" },
-                bmw: { main: "#0066aa", text: "BMW" },
-                ferrari: { main: "#ff3300", text: "FERRARI" },
-                lamborghini: { main: "#ffcc00", text: "LAMBORGHINI" },
-                porsche: { main: "#00aa66", text: "PORSCHE" },
-                mercedes: { main: "#888888", text: "MERCEDES" },
-                tesla: { main: "#666666", text: "TESLA" },
-                ford: { main: "#0044aa", text: "FORD" }
+            const brandNames = {
+                audi: "AUDI",
+                bmw: "BMW",
+                ferrari: "FERRARI",
+                lamborghini: "LAMBORGHINI",
+                porsche: "PORSCHE",
+                mercedes: "MERCEDES",
+                tesla: "TESLA",
+                ford: "FORD"
             };
-            let c = colors[brand] || { main: "#ff6600", text: brand.toUpperCase() };
-            return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'%3E%3Crect width='500' height='400' fill='%231a2a4a'/%3E%3Crect x='80' y='120' width='340' height='100' rx='15' fill='${c.main.replace('#', '%23')}'/%3E%3Crect x='150' y='90' width='200' height='50' rx='8' fill='${c.main.replace('#', '%23')}cc'/%3E%3Ccircle cx='160' cy='240' r='35' fill='%23222222'/%3E%3Ccircle cx='340' cy='240' r='35' fill='%23222222'/%3E%3Ctext x='250' y='180' text-anchor='middle' fill='white' font-size='28' font-family='monospace' font-weight='bold'%3E${c.text}%3C/text%3E%3C/svg%3E`;
+            const name = brandNames[brand] || brand.toUpperCase();
+            return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'%3E%3Crect width='500' height='400' fill='%231a2a4a'/%3E%3Crect x='80' y='120' width='340' height='100' rx='15' fill='%23ff6600'/%3E%3Crect x='150' y='90' width='200' height='50' rx='8' fill='%23ff8800'/%3E%3Ccircle cx='160' cy='240' r='35' fill='%23222222'/%3E%3Ccircle cx='340' cy='240' r='35' fill='%23222222'/%3E%3Ctext x='250' y='180' text-anchor='middle' fill='white' font-size='28' font-family='monospace' font-weight='bold'%3E${name}%3C/text%3E%3C/svg%3E`;
         }
         
         function setup() {
@@ -336,23 +335,19 @@
             textSize(14);
             text("🏎️ Selecione uma marca\n e clique em 'Buscar Imagem'", width/2, height/2);
             
-            // Event listeners
+            // Botão de busca
             let fetchBtn = select('#fetchBtn');
-            fetchBtn.mousePressed(() => {
-                fetchCarImage();
-            });
+            fetchBtn.mousePressed(fetchCarImage);
             
-            // Atualizar o texto da marca quando o select mudar
+            // Atualizar texto da marca quando o select mudar
             let brandSelect = select('#brand');
             brandSelect.changed(() => {
                 let selectedText = brandSelect.options[brandSelect.selectedIndex].text;
                 select('#selectedBrand').html(selectedText);
-                currentBrand = brandSelect.value();
             });
             
-            // Inicializar o texto da marca
+            // Inicializar texto
             select('#selectedBrand').html(select('#brand').options[select('#brand').selectedIndex].text);
-            currentBrand = select('#brand').value();
             
             // Filtros
             selectAll('.filter-btn').forEach(btn => {
@@ -366,6 +361,7 @@
                 });
             });
             
+            // Sliders
             select('#radialDistort').input(() => {
                 radialAmount = int(select('#radialDistort').value());
                 select('#radialVal').html(radialAmount);
@@ -386,17 +382,17 @@
         }
         
         function fetchCarImage() {
-            let statusDiv = select('#status');
-            let brand = currentBrand;
+            let brand = select('#brand').value();
             let brandName = select('#brand').options[select('#brand').selectedIndex].text;
+            let statusDiv = select('#status');
             
-            // Atualizar texto da marca selecionada
+            // Atualizar texto
             select('#selectedBrand').html(brandName);
             
             statusDiv.html('🏎️ Buscando imagem... ⏳');
             statusDiv.removeClass('success').removeClass('error').addClass('loading');
             
-            let imageUrl = carImagesDirect[brand];
+            let imageUrl = carImages[brand];
             
             if (!imageUrl) {
                 loadFallbackImage(brand, statusDiv);
@@ -409,7 +405,7 @@
                     displayImage(img, statusDiv);
                 },
                 (err) => {
-                    console.log('Erro ao carregar imagem direta, usando fallback:', err);
+                    console.log('Erro ao carregar, usando fallback:', err);
                     loadFallbackImage(brand, statusDiv);
                 }
             );
@@ -420,17 +416,15 @@
             loadImage(fallbackUrl, 
                 (img) => {
                     displayImage(img, statusDiv);
-                    statusDiv.html('⚠️ Modo Demo - Imagem SVG de fallback');
+                    statusDiv.html('⚠️ Modo Demo - Imagem SVG');
                 },
                 (err2) => {
                     statusDiv.html('❌ Erro ao carregar imagem. Tente novamente.');
                     statusDiv.removeClass('loading').addClass('error');
-                    
-                    // Desenhar mensagem de erro no canvas
                     background(20);
                     fill(150);
                     textSize(14);
-                    text("❌ Erro ao carregar imagem\nTente novamente mais tarde", width/2, height/2);
+                    text("❌ Erro ao carregar imagem\nTente novamente", width/2, height/2);
                 }
             );
         }
@@ -438,7 +432,7 @@
         function displayImage(img, statusDiv) {
             currentImage = img;
             
-            // Redimensionar para o canvas
+            // Redimensionar
             if (currentImage.width !== width || currentImage.height !== height) {
                 currentImage.resize(width, height);
             }
@@ -446,10 +440,17 @@
             currentImage.loadPixels();
             originalPixels = [...currentImage.pixels];
             
-            statusDiv.html('✅ Imagem carregada! Use os filtros abaixo.');
+            statusDiv.html('✅ Imagem carregada! Use os filtros.');
             statusDiv.removeClass('loading').addClass('success');
             
             // Resetar efeitos
+            resetEffects();
+            
+            // Desenhar imagem com decoração
+            drawImageWithDecoration();
+        }
+        
+        function resetEffects() {
             currentFilter = 'none';
             radialAmount = 0;
             saturationAmount = 100;
@@ -460,24 +461,19 @@
             select('#radialVal').html('0');
             select('#satVal').html('100%');
             select('#brightVal').html('0');
-            
-            // Desenhar a imagem com o carro decorativo
-            drawImageWithDecoration();
         }
         
         function drawImageWithDecoration() {
             if (!currentImage) return;
             
-            // Criar um buffer
+            // Criar buffer
             let buffer = createGraphics(width, height);
-            
-            // Desenhar a imagem do carro
             buffer.image(currentImage, 0, 0, width, height);
             
-            // Desenhar o carro decorativo no canto inferior direito
+            // Desenhar carro decorativo
             drawDecorativeCar(buffer);
             
-            // Atualizar a imagem principal
+            // Atualizar imagem
             currentImage = buffer.get();
             currentImage.loadPixels();
             originalPixels = [...currentImage.pixels];
@@ -487,7 +483,6 @@
         function drawDecorativeCar(g) {
             g.push();
             
-            // Posição: canto inferior direito
             let carX = g.width - 130;
             let carY = g.height - 90;
             
@@ -496,7 +491,7 @@
             g.noStroke();
             g.ellipse(carX + 45, carY + 30, 90, 12);
             
-            // Corpo principal
+            // Corpo
             g.fill(255, 80, 40);
             g.rect(carX, carY, 90, 35, 8);
             
@@ -537,7 +532,10 @@
         }
         
         function resetImage() {
-            if (!originalPixels || !currentImage) return;
+            if (!originalPixels || !currentImage) {
+                console.log("Sem imagem para resetar");
+                return;
+            }
             
             currentImage.loadPixels();
             for (let i = 0; i < originalPixels.length; i++) {
@@ -546,32 +544,30 @@
             currentImage.updatePixels();
             image(currentImage, 0, 0);
             
-            radialAmount = 0;
-            saturationAmount = 100;
-            brightnessAmount = 0;
-            currentFilter = 'none';
-            select('#radialDistort').value(0);
-            select('#saturation').value(100);
-            select('#brightness').value(0);
-            select('#radialVal').html('0');
-            select('#satVal').html('100%');
-            select('#brightVal').html('0');
+            resetEffects();
         }
         
         function applyFilters() {
-            if (!currentImage || !originalPixels) return;
+            if (!currentImage || !originalPixels) {
+                console.log("Sem imagem para aplicar filtros");
+                return;
+            }
             
+            // Reset para original
             currentImage.loadPixels();
             for (let i = 0; i < originalPixels.length; i++) {
                 currentImage.pixels[i] = originalPixels[i];
             }
             
+            // Aplicar filtro de pixel
             if (currentFilter !== 'none') {
                 applyPixelFilter();
             }
             
+            // Ajustes de cor
             applyColorAdjustments();
             
+            // Distorção radial
             if (radialAmount > 0) {
                 applyRadialDistortion();
             }
@@ -719,7 +715,7 @@
         }
         
         function draw() {
-            // O desenho é feito nos callbacks
+            // Não é necessário fazer nada aqui
         }
     </script>
 </body>
