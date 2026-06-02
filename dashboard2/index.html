@@ -93,11 +93,6 @@
             font-size: 12px;
         }
         
-        .status-success { color: #4ade80; }
-        .status-error { color: #f87171; }
-        .status-loading { color: #fbbf24; }
-        .status-default { color: #94a3b8; }
-        
         h2 {
             margin: 0 0 5px 0;
         }
@@ -138,7 +133,7 @@
             <label>🔆 Brilho: <span id="brightVal">0</span></label>
             <input type="range" id="brightSlider" min="-100" max="100" value="0" step="1">
             
-            <div id="statusMsg" class="status-default">💡 Clique em "NOVO CARRO ALEATÓRIO"</div>
+            <div id="statusMsg" class="status" style="color: #94a3b8;">💡 Clique em "NOVO CARRO ALEATÓRIO"</div>
         </div>
     </div>
 
@@ -222,18 +217,14 @@
             });
         }
         
-        function setStatus(text, type) {
+        function setStatus(text, color) {
             let div = select('#statusMsg');
             div.html(text);
-            div.removeClass('status-default status-success status-error status-loading');
-            if (type === 'success') div.addClass('status-success');
-            else if (type === 'error') div.addClass('status-error');
-            else if (type === 'loading') div.addClass('status-loading');
-            else div.addClass('status-default');
+            div.style('color', color);
         }
         
         function loadRandomCar() {
-            setStatus('⏳ A buscar carro...', 'loading');
+            setStatus('⏳ A buscar carro...', '#fbbf24'); // amarelo
             
             let randomIndex = floor(random(carImages.length));
             let imgUrl = carImages[randomIndex];
@@ -249,7 +240,7 @@
                     img.loadPixels();
                     originalPixels = [...img.pixels];
                     
-                    setStatus('✅ Carro carregado! Use os filtros.', 'success');
+                    setStatus('✅ Carro carregado! Use os filtros.', '#4ade80'); // verde
                     
                     // Reset filtros
                     currentFilter = 'none';
@@ -267,7 +258,7 @@
                 },
                 (err) => {
                     console.error(err);
-                    setStatus('❌ Erro ao carregar. Tente novamente.', 'error');
+                    setStatus('❌ Erro ao carregar. Tente novamente.', '#f87171'); // vermelho
                     background(20);
                     textAlign(CENTER, CENTER);
                     fill(200);
@@ -278,7 +269,7 @@
         
         function resetImage() {
             if (!originalPixels || !img) {
-                setStatus('⚠️ Clique em NOVO CARRO primeiro', 'error');
+                setStatus('⚠️ Clique em NOVO CARRO primeiro', '#f87171');
                 return;
             }
             
@@ -300,7 +291,7 @@
             select('#satVal').html('100');
             select('#brightVal').html('0');
             
-            setStatus('🔄 Filtros resetados!', 'success');
+            setStatus('🔄 Filtros resetados!', '#4ade80');
         }
         
         function applyFilters() {
