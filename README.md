@@ -1,17 +1,5 @@
 # MyDashboards - Dashboards Criativos com p5.js
 
-# Estrutura do Projeto
-
-MyDashboards/
-├── index.html              # Landing page principal
-├── README.md               # Documentação
-├── dashboard1/
-│   └── index.html          # GeoPulse (Geolocalização + Globo 3D)
-└── dashboard2/
-│   └── index.html          # AI Chatbot (Chat com robô p5.js)
-
-## 🌟 Visão Geral
-
 Este projeto consiste em dois dashboards interativos desenvolvidos com a biblioteca p5.js, integrando APIs públicas com **CORS habilitado** para criar visualizações de dados dinâmicas e experiências criativas.
 
 | Dashboard | Tipo | API | Funcionalidade Principal |
