@@ -84,15 +84,6 @@
             cursor: pointer;
         }
         
-        .status {
-            background: #0f172a;
-            border-radius: 12px;
-            padding: 12px;
-            margin-top: 15px;
-            text-align: center;
-            font-size: 12px;
-        }
-        
         h2 {
             margin: 0 0 5px 0;
         }
@@ -133,7 +124,7 @@
             <label>🔆 Brilho: <span id="brightVal">0</span></label>
             <input type="range" id="brightSlider" min="-100" max="100" value="0" step="1">
             
-            <div id="statusMsg" class="status" style="color: #94a3b8;">💡 Clique em "NOVO CARRO ALEATÓRIO"</div>
+            <div id="statusMsg" style="background: #0f172a; border-radius: 12px; padding: 12px; margin-top: 15px; text-align: center; font-size: 12px; color: #94a3b8;">💡 Clique em "NOVO CARRO ALEATÓRIO"</div>
         </div>
     </div>
 
@@ -150,7 +141,7 @@
         let canvasW = 600;
         let canvasH = 400;
         
-        // URLs de imagens de carros (diretas e confiáveis)
+        // URLs de imagens de carros
         const carImages = [
             "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=600&h=400&fit=crop",
             "https://images.pexels.com/photos/290275/2015-bmw-m4-coupe-290275.jpeg?w=600&h=400&fit=crop",
@@ -224,7 +215,7 @@
         }
         
         function loadRandomCar() {
-            setStatus('⏳ A buscar carro...', '#fbbf24'); // amarelo
+            setStatus('⏳ A buscar carro...', '#fbbf24');
             
             let randomIndex = floor(random(carImages.length));
             let imgUrl = carImages[randomIndex];
@@ -240,7 +231,7 @@
                     img.loadPixels();
                     originalPixels = [...img.pixels];
                     
-                    setStatus('✅ Carro carregado! Use os filtros.', '#4ade80'); // verde
+                    setStatus('✅ Carro carregado! Use os filtros.', '#4ade80');
                     
                     // Reset filtros
                     currentFilter = 'none';
@@ -258,7 +249,7 @@
                 },
                 (err) => {
                     console.error(err);
-                    setStatus('❌ Erro ao carregar. Tente novamente.', '#f87171'); // vermelho
+                    setStatus('❌ Erro ao carregar. Tente novamente.', '#f87171');
                     background(20);
                     textAlign(CENTER, CENTER);
                     fill(200);
