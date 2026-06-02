@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Gallery | Imagens de Carros + Filtros</title>
+    <title>Car Gallery | API de Imagens de Carros</title>
     <style>
         * {
             user-select: none;
@@ -24,7 +24,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 25px;
-            max-width: 1400px;
+            max-width: 1200px;
             width: 100%;
             justify-content: center;
         }
@@ -39,12 +39,11 @@
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             background: #0f0f1a;
-            cursor: pointer;
         }
         
         .controls {
             flex: 1;
-            min-width: 320px;
+            min-width: 300px;
             background: rgba(15, 25, 45, 0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
@@ -52,8 +51,6 @@
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.1);
             height: fit-content;
-            max-height: 90vh;
-            overflow-y: auto;
         }
         
         .controls h2 {
@@ -63,12 +60,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-        
-        .controls p {
-            color: #94a3b8;
-            font-size: 0.85rem;
-            margin-bottom: 20px;
         }
         
         .input-group {
@@ -137,11 +128,14 @@
             padding: 8px;
             font-size: 12px;
             margin-bottom: 0;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
         }
         
         .filter-btn:hover {
             background: #475569;
-            transform: none;
         }
         
         input[type="range"] {
@@ -171,7 +165,6 @@
         
         .status.loading {
             color: #fbbf24;
-            animation: pulse 1s infinite;
         }
         
         .status.success {
@@ -192,34 +185,9 @@
             text-align: center;
         }
         
-        .car-info span {
-            color: #ffaa66;
-            font-weight: bold;
-        }
-        
         @keyframes pulse {
             0%, 100% { opacity: 1; }
             50% { opacity: 0.6; }
-        }
-        
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: #1e293b;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #ff6b6b;
-            border-radius: 3px;
-        }
-        
-        @media (max-width: 900px) {
-            .canvas-area { min-width: 350px; }
-            canvas { width: 100%; height: auto; }
-            .controls { min-width: 280px; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
@@ -231,39 +199,36 @@
         </div>
         <div class="controls">
             <h2>🏎️ Car Gallery</h2>
-            <p>Imagens de Carros por Marca + Filtros interativos</p>
+            <p>API de Imagens de Carros (Unsplash)</p>
             
             <div class="input-group">
                 <label>🚗 Marca do Carro</label>
                 <select id="brand">
                     <option value="audi">Audi R8</option>
                     <option value="bmw">BMW M4</option>
-                    <option value="ferrari">Ferrari F8 Tributo</option>
+                    <option value="ferrari">Ferrari F8</option>
                     <option value="lamborghini">Lamborghini Huracán</option>
                     <option value="porsche">Porsche 911</option>
                     <option value="mercedes">Mercedes-AMG GT</option>
-                    <option value="tesla">Tesla Model S</option>
-                    <option value="ford">Ford Mustang GT</option>
                 </select>
             </div>
             
-            <button id="fetchBtn">🔍 Buscar Imagem do Carro</button>
+            <button id="fetchBtn">🔍 Buscar Imagem</button>
             
             <div class="car-info" id="carInfo">
-                <span>🏎️ Marca selecionada:</span> <span id="selectedBrand">Audi R8</span><br>
-                <span>📸</span> Clique em "Buscar Imagem" para carregar
+                <span>🏎️ Marca:</span> <span id="selectedBrand">Audi R8</span>
             </div>
             
             <div class="filter-section">
-                <h3>🎛️ Pós-Processamento Interativo</h3>
+                <h3>🎛️ Filtros</h3>
                 <div class="filter-buttons">
                     <button class="filter-btn" data-filter="pixelate">Pixelate</button>
-                    <button class="filter-btn" data-filter="glitch">Glitch Art</button>
-                    <button class="filter-btn" data-filter="invert">Inverter Cores</button>
-                    <button class="filter-btn" data-filter="threshold">Limiar (B&W)</button>
+                    <button class="filter-btn" data-filter="glitch">Glitch</button>
+                    <button class="filter-btn" data-filter="invert">Inverter</button>
+                    <button class="filter-btn" data-filter="threshold">Preto & Branco</button>
                     <button class="filter-btn" data-filter="emboss">Relevo</button>
-                    <button class="filter-btn" data-filter="edges">Detecção Bordas</button>
-                    <button class="filter-btn" data-filter="reset">Resetar</button>
+                    <button class="filter-btn" data-filter="edges">Bordas</button>
+                    <button class="filter-btn" data-filter="reset">Reset</button>
                 </div>
                 
                 <div class="input-group">
@@ -283,145 +248,151 @@
             </div>
             
             <div class="status" id="status">
-                💡 Selecione uma marca e clique em "Buscar Imagem do Carro"!
+                💡 Selecione uma marca e clique em Buscar
             </div>
         </div>
     </div>
     
     <script>
-        // Variáveis globais
-        let currentImage = null;
-        let originalPixels = null;
+        // ============================================
+        // CONFIGURAÇÃO INICIAL
+        // ============================================
+        let img = null;           // imagem atual
+        let originalPixels = null; // cópia dos pixels originais
         let currentFilter = 'none';
         let radialAmount = 0;
         let saturationAmount = 100;
         let brightnessAmount = 0;
         
-        // URLs de imagens de carros (CDN - imagens diretas)
+        // URLs diretas de imagens de carros (Unsplash CDN - funcionam com CORS)
         const carImages = {
             audi: "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=500&h=400&fit=crop",
             bmw: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&h=400&fit=crop",
             ferrari: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=500&h=400&fit=crop",
             lamborghini: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=500&h=400&fit=crop",
             porsche: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&h=400&fit=crop",
-            mercedes: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d1?w=500&h=400&fit=crop",
-            tesla: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=500&h=400&fit=crop",
-            ford: "https://images.unsplash.com/photo-1580939583459-5e4f7d6ea5b6?w=500&h=400&fit=crop"
+            mercedes: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d1?w=500&h=400&fit=crop"
         };
         
-        // Fallback SVG para cada marca
-        function getFallbackSVG(brand) {
-            const brandNames = {
-                audi: "AUDI",
-                bmw: "BMW",
-                ferrari: "FERRARI",
-                lamborghini: "LAMBORGHINI",
-                porsche: "PORSCHE",
-                mercedes: "MERCEDES",
-                tesla: "TESLA",
-                ford: "FORD"
-            };
-            const name = brandNames[brand] || brand.toUpperCase();
-            return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 500 400'%3E%3Crect width='500' height='400' fill='%231a2a4a'/%3E%3Crect x='80' y='120' width='340' height='100' rx='15' fill='%23ff6600'/%3E%3Crect x='150' y='90' width='200' height='50' rx='8' fill='%23ff8800'/%3E%3Ccircle cx='160' cy='240' r='35' fill='%23222222'/%3E%3Ccircle cx='340' cy='240' r='35' fill='%23222222'/%3E%3Ctext x='250' y='180' text-anchor='middle' fill='white' font-size='28' font-family='monospace' font-weight='bold'%3E${name}%3C/text%3E%3C/svg%3E`;
-        }
-        
+        // ============================================
+        // SETUP - p5.js
+        // ============================================
         function setup() {
             let canvas = createCanvas(500, 400);
             canvas.parent('p5canvas');
-            background(20);
+            background(30);
             
             textAlign(CENTER, CENTER);
             fill(150);
             textSize(14);
             text("🏎️ Selecione uma marca\n e clique em 'Buscar Imagem'", width/2, height/2);
             
-            // Botão de busca
-            let fetchBtn = select('#fetchBtn');
-            fetchBtn.mousePressed(fetchCarImage);
+            // Evento do botão Buscar
+            let btn = select('#fetchBtn');
+            btn.mousePressed(fetchCarImage);
             
             // Atualizar texto da marca quando o select mudar
             let brandSelect = select('#brand');
             brandSelect.changed(() => {
-                let selectedText = brandSelect.options[brandSelect.selectedIndex].text;
-                select('#selectedBrand').html(selectedText);
+                let text = brandSelect.options[brandSelect.selectedIndex].text;
+                select('#selectedBrand').html(text);
             });
             
             // Inicializar texto
             select('#selectedBrand').html(select('#brand').options[select('#brand').selectedIndex].text);
             
-            // Filtros
-            selectAll('.filter-btn').forEach(btn => {
+            // Eventos dos filtros
+            let filterBtns = selectAll('.filter-btn');
+            for (let btn of filterBtns) {
                 btn.mousePressed(() => {
-                    currentFilter = btn.elt.dataset.filter;
-                    if (currentFilter === 'reset') {
+                    let filter = btn.elt.dataset.filter;
+                    if (filter === 'reset') {
                         resetImage();
                     } else {
+                        currentFilter = filter;
                         applyFilters();
                     }
                 });
-            });
+            }
             
             // Sliders
-            select('#radialDistort').input(() => {
-                radialAmount = int(select('#radialDistort').value());
+            let radialSlider = select('#radialDistort');
+            radialSlider.input(() => {
+                radialAmount = int(radialSlider.value());
                 select('#radialVal').html(radialAmount);
                 applyFilters();
             });
             
-            select('#saturation').input(() => {
-                saturationAmount = int(select('#saturation').value());
+            let satSlider = select('#saturation');
+            satSlider.input(() => {
+                saturationAmount = int(satSlider.value());
                 select('#satVal').html(saturationAmount + '%');
                 applyFilters();
             });
             
-            select('#brightness').input(() => {
-                brightnessAmount = int(select('#brightness').value());
+            let brightSlider = select('#brightness');
+            brightSlider.input(() => {
+                brightnessAmount = int(brightSlider.value());
                 select('#brightVal').html(brightnessAmount);
                 applyFilters();
             });
         }
         
+        // ============================================
+        // BUSCAR IMAGEM DA API
+        // ============================================
         function fetchCarImage() {
             let brand = select('#brand').value();
-            let brandName = select('#brand').options[select('#brand').selectedIndex].text;
             let statusDiv = select('#status');
-            
-            // Atualizar texto
-            select('#selectedBrand').html(brandName);
-            
-            statusDiv.html('🏎️ Buscando imagem... ⏳');
-            statusDiv.removeClass('success').removeClass('error').addClass('loading');
-            
             let imageUrl = carImages[brand];
             
             if (!imageUrl) {
-                loadFallbackImage(brand, statusDiv);
+                statusDiv.html('❌ Marca não encontrada');
+                statusDiv.removeClass('loading').addClass('error');
                 return;
             }
             
-            // Tentar carregar a imagem
+            statusDiv.html('🖼️ Buscando imagem... ⏳');
+            statusDiv.removeClass('success').removeClass('error').addClass('loading');
+            
+            // Carregar imagem via p5.js
             loadImage(imageUrl, 
-                (img) => {
-                    displayImage(img, statusDiv);
+                (loadedImg) => {
+                    img = loadedImg;
+                    
+                    // Redimensionar para o canvas
+                    if (img.width !== width || img.height !== height) {
+                        img.resize(width, height);
+                    }
+                    
+                    // Guardar pixels originais
+                    img.loadPixels();
+                    originalPixels = [...img.pixels];
+                    
+                    statusDiv.html('✅ Imagem carregada! Use os filtros.');
+                    statusDiv.removeClass('loading').addClass('success');
+                    
+                    // Resetar todos os efeitos
+                    currentFilter = 'none';
+                    radialAmount = 0;
+                    saturationAmount = 100;
+                    brightnessAmount = 0;
+                    select('#radialDistort').value(0);
+                    select('#saturation').value(100);
+                    select('#brightness').value(0);
+                    select('#radialVal').html('0');
+                    select('#satVal').html('100%');
+                    select('#brightVal').html('0');
+                    
+                    // Mostrar imagem
+                    image(img, 0, 0);
                 },
                 (err) => {
-                    console.log('Erro ao carregar, usando fallback:', err);
-                    loadFallbackImage(brand, statusDiv);
-                }
-            );
-        }
-        
-        function loadFallbackImage(brand, statusDiv) {
-            let fallbackUrl = getFallbackSVG(brand);
-            loadImage(fallbackUrl, 
-                (img) => {
-                    displayImage(img, statusDiv);
-                    statusDiv.html('⚠️ Modo Demo - Imagem SVG');
-                },
-                (err2) => {
+                    console.error('Erro ao carregar:', err);
                     statusDiv.html('❌ Erro ao carregar imagem. Tente novamente.');
                     statusDiv.removeClass('loading').addClass('error');
-                    background(20);
+                    
+                    background(30);
                     fill(150);
                     textSize(14);
                     text("❌ Erro ao carregar imagem\nTente novamente", width/2, height/2);
@@ -429,28 +400,23 @@
             );
         }
         
-        function displayImage(img, statusDiv) {
-            currentImage = img;
-            
-            // Redimensionar
-            if (currentImage.width !== width || currentImage.height !== height) {
-                currentImage.resize(width, height);
+        // ============================================
+        // RESETAR IMAGEM
+        // ============================================
+        function resetImage() {
+            if (!originalPixels || !img) {
+                console.log("Sem imagem para resetar");
+                return;
             }
             
-            currentImage.loadPixels();
-            originalPixels = [...currentImage.pixels];
+            img.loadPixels();
+            for (let i = 0; i < originalPixels.length; i++) {
+                img.pixels[i] = originalPixels[i];
+            }
+            img.updatePixels();
+            image(img, 0, 0);
             
-            statusDiv.html('✅ Imagem carregada! Use os filtros.');
-            statusDiv.removeClass('loading').addClass('success');
-            
-            // Resetar efeitos
-            resetEffects();
-            
-            // Desenhar imagem com decoração
-            drawImageWithDecoration();
-        }
-        
-        function resetEffects() {
+            // Resetar valores dos sliders
             currentFilter = 'none';
             radialAmount = 0;
             saturationAmount = 100;
@@ -463,108 +429,27 @@
             select('#brightVal').html('0');
         }
         
-        function drawImageWithDecoration() {
-            if (!currentImage) return;
-            
-            // Criar buffer
-            let buffer = createGraphics(width, height);
-            buffer.image(currentImage, 0, 0, width, height);
-            
-            // Desenhar carro decorativo
-            drawDecorativeCar(buffer);
-            
-            // Atualizar imagem
-            currentImage = buffer.get();
-            currentImage.loadPixels();
-            originalPixels = [...currentImage.pixels];
-            image(currentImage, 0, 0);
-        }
-        
-        function drawDecorativeCar(g) {
-            g.push();
-            
-            let carX = g.width - 130;
-            let carY = g.height - 90;
-            
-            // Sombra
-            g.fill(0, 0, 0, 100);
-            g.noStroke();
-            g.ellipse(carX + 45, carY + 30, 90, 12);
-            
-            // Corpo
-            g.fill(255, 80, 40);
-            g.rect(carX, carY, 90, 35, 8);
-            
-            // Teto
-            g.fill(220, 60, 30);
-            g.rect(carX + 20, carY - 12, 45, 18, 6);
-            
-            // Janelas
-            g.fill(100, 150, 200, 200);
-            g.rect(carX + 25, carY - 10, 15, 10, 3);
-            g.rect(carX + 45, carY - 10, 15, 10, 3);
-            
-            // Rodas
-            g.fill(30, 30, 30);
-            g.ellipse(carX + 22, carY + 30, 22, 22);
-            g.ellipse(carX + 68, carY + 30, 22, 22);
-            g.fill(70, 70, 80);
-            g.ellipse(carX + 22, carY + 30, 12, 12);
-            g.ellipse(carX + 68, carY + 30, 12, 12);
-            
-            // Faróis
-            g.fill(255, 255, 180);
-            g.ellipse(carX + 85, carY + 18, 9, 7);
-            g.fill(255, 100, 50);
-            g.ellipse(carX + 5, carY + 18, 9, 7);
-            
-            // Spoiler
-            g.fill(200, 60, 30);
-            g.rect(carX + 15, carY - 18, 55, 5, 2);
-            
-            // Emblema
-            g.fill(255, 215, 0);
-            g.ellipse(carX + 45, carY + 18, 10, 10);
-            g.fill(0);
-            g.ellipse(carX + 45, carY + 18, 4, 4);
-            
-            g.pop();
-        }
-        
-        function resetImage() {
-            if (!originalPixels || !currentImage) {
-                console.log("Sem imagem para resetar");
-                return;
-            }
-            
-            currentImage.loadPixels();
-            for (let i = 0; i < originalPixels.length; i++) {
-                currentImage.pixels[i] = originalPixels[i];
-            }
-            currentImage.updatePixels();
-            image(currentImage, 0, 0);
-            
-            resetEffects();
-        }
-        
+        // ============================================
+        // APLICAR FILTROS
+        // ============================================
         function applyFilters() {
-            if (!currentImage || !originalPixels) {
+            if (!originalPixels || !img) {
                 console.log("Sem imagem para aplicar filtros");
                 return;
             }
             
-            // Reset para original
-            currentImage.loadPixels();
+            // Começar com os pixels originais
+            img.loadPixels();
             for (let i = 0; i < originalPixels.length; i++) {
-                currentImage.pixels[i] = originalPixels[i];
+                img.pixels[i] = originalPixels[i];
             }
             
-            // Aplicar filtro de pixel
+            // Aplicar filtro de pixel se necessário
             if (currentFilter !== 'none') {
                 applyPixelFilter();
             }
             
-            // Ajustes de cor
+            // Ajustes de cor (saturação e brilho)
             applyColorAdjustments();
             
             // Distorção radial
@@ -572,19 +457,22 @@
                 applyRadialDistortion();
             }
             
-            currentImage.updatePixels();
-            image(currentImage, 0, 0);
+            img.updatePixels();
+            image(img, 0, 0);
         }
         
+        // ============================================
+        // FILTRO DE PIXELS (Pixelate, Glitch, Invert, etc)
+        // ============================================
         function applyPixelFilter() {
-            currentImage.loadPixels();
+            img.loadPixels();
             
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     let idx = (y * width + x) * 4;
-                    let r = currentImage.pixels[idx];
-                    let g = currentImage.pixels[idx + 1];
-                    let b = currentImage.pixels[idx + 2];
+                    let r = img.pixels[idx];
+                    let g = img.pixels[idx + 1];
+                    let b = img.pixels[idx + 2];
                     
                     switch(currentFilter) {
                         case 'pixelate':
@@ -592,46 +480,46 @@
                             let px = floor(x / pixelSize) * pixelSize;
                             let py = floor(y / pixelSize) * pixelSize;
                             let pIdx = (py * width + px) * 4;
-                            currentImage.pixels[idx] = currentImage.pixels[pIdx];
-                            currentImage.pixels[idx + 1] = currentImage.pixels[pIdx + 1];
-                            currentImage.pixels[idx + 2] = currentImage.pixels[pIdx + 2];
+                            img.pixels[idx] = img.pixels[pIdx];
+                            img.pixels[idx + 1] = img.pixels[pIdx + 1];
+                            img.pixels[idx + 2] = img.pixels[pIdx + 2];
                             break;
                             
                         case 'glitch':
                             if (random(1) < 0.05) {
                                 let offset = int(random(-20, 20));
                                 let newIdx = idx + offset * 4;
-                                if (newIdx >= 0 && newIdx < currentImage.pixels.length - 3) {
-                                    currentImage.pixels[idx] = currentImage.pixels[newIdx];
-                                    currentImage.pixels[idx + 1] = currentImage.pixels[newIdx + 1];
-                                    currentImage.pixels[idx + 2] = currentImage.pixels[newIdx + 2];
+                                if (newIdx >= 0 && newIdx < img.pixels.length - 3) {
+                                    img.pixels[idx] = img.pixels[newIdx];
+                                    img.pixels[idx + 1] = img.pixels[newIdx + 1];
+                                    img.pixels[idx + 2] = img.pixels[newIdx + 2];
                                 }
                             }
                             break;
                             
                         case 'invert':
-                            currentImage.pixels[idx] = 255 - r;
-                            currentImage.pixels[idx + 1] = 255 - g;
-                            currentImage.pixels[idx + 2] = 255 - b;
+                            img.pixels[idx] = 255 - r;
+                            img.pixels[idx + 1] = 255 - g;
+                            img.pixels[idx + 2] = 255 - b;
                             break;
                             
                         case 'threshold':
                             let gray = (r + g + b) / 3;
                             let val = gray > 127 ? 255 : 0;
-                            currentImage.pixels[idx] = val;
-                            currentImage.pixels[idx + 1] = val;
-                            currentImage.pixels[idx + 2] = val;
+                            img.pixels[idx] = val;
+                            img.pixels[idx + 1] = val;
+                            img.pixels[idx + 2] = val;
                             break;
                             
                         case 'emboss':
                             if (x > 0 && y > 0) {
                                 let prevIdx = ((y-1) * width + (x-1)) * 4;
-                                let dr = r - currentImage.pixels[prevIdx];
-                                let dg = g - currentImage.pixels[prevIdx + 1];
-                                let db = b - currentImage.pixels[prevIdx + 2];
-                                currentImage.pixels[idx] = constrain(128 + dr, 0, 255);
-                                currentImage.pixels[idx + 1] = constrain(128 + dg, 0, 255);
-                                currentImage.pixels[idx + 2] = constrain(128 + db, 0, 255);
+                                let dr = r - img.pixels[prevIdx];
+                                let dg = g - img.pixels[prevIdx + 1];
+                                let db = b - img.pixels[prevIdx + 2];
+                                img.pixels[idx] = constrain(128 + dr, 0, 255);
+                                img.pixels[idx + 1] = constrain(128 + dg, 0, 255);
+                                img.pixels[idx + 2] = constrain(128 + db, 0, 255);
                             }
                             break;
                             
@@ -639,47 +527,55 @@
                             if (x > 0 && x < width-1 && y > 0 && y < height-1) {
                                 let rightIdx = (y * width + (x+1)) * 4;
                                 let bottomIdx = ((y+1) * width + x) * 4;
-                                let edgeR = abs(r - currentImage.pixels[rightIdx]) + abs(r - currentImage.pixels[bottomIdx]);
-                                let edgeG = abs(g - currentImage.pixels[rightIdx+1]) + abs(g - currentImage.pixels[bottomIdx+1]);
-                                let edgeB = abs(b - currentImage.pixels[rightIdx+2]) + abs(b - currentImage.pixels[bottomIdx+2]);
+                                let edgeR = abs(r - img.pixels[rightIdx]) + abs(r - img.pixels[bottomIdx]);
+                                let edgeG = abs(g - img.pixels[rightIdx+1]) + abs(g - img.pixels[bottomIdx+1]);
+                                let edgeB = abs(b - img.pixels[rightIdx+2]) + abs(b - img.pixels[bottomIdx+2]);
                                 let edge = constrain((edgeR + edgeG + edgeB) / 3, 0, 255);
-                                currentImage.pixels[idx] = edge;
-                                currentImage.pixels[idx+1] = edge;
-                                currentImage.pixels[idx+2] = edge;
+                                img.pixels[idx] = edge;
+                                img.pixels[idx+1] = edge;
+                                img.pixels[idx+2] = edge;
                             }
                             break;
                     }
                 }
             }
-            currentImage.updatePixels();
+            img.updatePixels();
         }
         
+        // ============================================
+        // AJUSTES DE SATURAÇÃO E BRILHO
+        // ============================================
         function applyColorAdjustments() {
-            currentImage.loadPixels();
+            img.loadPixels();
             
-            for (let i = 0; i < currentImage.pixels.length; i += 4) {
-                let r = currentImage.pixels[i];
-                let g = currentImage.pixels[i + 1];
-                let b = currentImage.pixels[i + 2];
+            for (let i = 0; i < img.pixels.length; i += 4) {
+                let r = img.pixels[i];
+                let g = img.pixels[i + 1];
+                let b = img.pixels[i + 2];
                 
+                // Saturação
                 let gray = (r + g + b) / 3;
                 let satFactor = saturationAmount / 100;
                 let newR = gray + (r - gray) * satFactor;
                 let newG = gray + (g - gray) * satFactor;
                 let newB = gray + (b - gray) * satFactor;
                 
-                currentImage.pixels[i] = constrain(newR + brightnessAmount, 0, 255);
-                currentImage.pixels[i + 1] = constrain(newG + brightnessAmount, 0, 255);
-                currentImage.pixels[i + 2] = constrain(newB + brightnessAmount, 0, 255);
+                // Brilho
+                img.pixels[i] = constrain(newR + brightnessAmount, 0, 255);
+                img.pixels[i + 1] = constrain(newG + brightnessAmount, 0, 255);
+                img.pixels[i + 2] = constrain(newB + brightnessAmount, 0, 255);
             }
-            currentImage.updatePixels();
+            img.updatePixels();
         }
         
+        // ============================================
+        // DISTORÇÃO RADIAL
+        // ============================================
         function applyRadialDistortion() {
             if (radialAmount === 0) return;
             
-            currentImage.loadPixels();
-            let distorted = new Array(currentImage.pixels.length);
+            img.loadPixels();
+            let distorted = new Array(img.pixels.length);
             let centerX = width / 2;
             let centerY = height / 2;
             let maxRadius = dist(0, 0, centerX, centerY);
@@ -690,6 +586,7 @@
                     let dx = x - centerX;
                     let dy = y - centerY;
                     let radius = dist(x, y, centerX, centerY);
+                    let angle = atan2(dy, dx);
                     
                     let factor = 1 + strength * (radius / maxRadius);
                     let newX = centerX + dx * factor;
@@ -701,21 +598,25 @@
                     if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
                         let srcIdx = (srcY * width + srcX) * 4;
                         let dstIdx = (y * width + x) * 4;
-                        distorted[dstIdx] = currentImage.pixels[srcIdx];
-                        distorted[dstIdx + 1] = currentImage.pixels[srcIdx + 1];
-                        distorted[dstIdx + 2] = currentImage.pixels[srcIdx + 2];
+                        distorted[dstIdx] = img.pixels[srcIdx];
+                        distorted[dstIdx + 1] = img.pixels[srcIdx + 1];
+                        distorted[dstIdx + 2] = img.pixels[srcIdx + 2];
+                        distorted[dstIdx + 3] = img.pixels[srcIdx + 3];
                     }
                 }
             }
             
             for (let i = 0; i < distorted.length; i++) {
-                if (distorted[i] !== undefined) currentImage.pixels[i] = distorted[i];
+                if (distorted[i] !== undefined) img.pixels[i] = distorted[i];
             }
-            currentImage.updatePixels();
+            img.updatePixels();
         }
         
+        // ============================================
+        // DRAW (vazio - tudo feito nos callbacks)
+        // ============================================
         function draw() {
-            // Não é necessário fazer nada aqui
+            // Nada aqui - a imagem é desenhada nos callbacks
         }
     </script>
 </body>
