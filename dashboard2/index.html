@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Gallery | Imagens de Carros</title>
+    <title>Car Gallery | Fotos Aleatórias de Carros</title>
     <style>
         body {
             margin: 0;
@@ -38,22 +38,17 @@
             color: white;
         }
         
-        select, button {
+        button {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             border-radius: 12px;
-            border: 1px solid #334155;
-            background: #1e293b;
+            border: none;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             color: white;
-            font-size: 14px;
+            font-weight: bold;
+            font-size: 16px;
             margin: 10px 0;
             cursor: pointer;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            border: none;
-            font-weight: bold;
         }
         
         button:hover {
@@ -67,6 +62,7 @@
             width: auto;
             display: inline-block;
             padding: 8px 12px;
+            font-size: 12px;
         }
         
         .filter-group {
@@ -88,10 +84,10 @@
             font-size: 12px;
         }
         
-        .status-success { color: #4ade80; background: #0f172a; }
-        .status-error { color: #f87171; background: #0f172a; }
-        .status-loading { color: #fbbf24; background: #0f172a; }
-        .status-default { color: #94a3b8; background: #0f172a; }
+        .status-success { color: #4ade80; }
+        .status-error { color: #f87171; }
+        .status-loading { color: #fbbf24; }
+        .status-default { color: #94a3b8; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 </head>
@@ -100,17 +96,9 @@
         <div id="canvasContainer"></div>
         <div class="controls">
             <h2>🏎️ Car Gallery</h2>
+            <p>Fotos aleatórias de carros desportivos</p>
             
-            <select id="brandSelect">
-                <option value="audi">Audi R8</option>
-                <option value="bmw">BMW M4</option>
-                <option value="ferrari">Ferrari F8 Tributo</option>
-                <option value="lamborghini">Lamborghini Huracán</option>
-                <option value="porsche">Porsche 911 Turbo</option>
-                <option value="mercedes">Mercedes-AMG GT</option>
-            </select>
-            
-            <button id="loadBtn">🔍 CARREGAR IMAGEM</button>
+            <button id="randomBtn">🎲 NOVO CARRO ALEATÓRIO</button>
             
             <div class="filter-group">
                 <button class="filter-btn" data-filter="pixelate">Pixelate</button>
@@ -131,44 +119,11 @@
             <label>🔆 Brilho: <span id="brightVal">0</span></label>
             <input type="range" id="brightSlider" min="-100" max="100" value="0" step="1">
             
-            <div id="statusMsg" class="status-default">💡 Selecione uma marca e clique em CARREGAR</div>
+            <div id="statusMsg" class="status-default">💡 Clique em "NOVO CARRO ALEATÓRIO"</div>
         </div>
     </div>
 
     <script>
-        // ============================================
-        // IMAGENS DE CARROS (URLs 100% VERIFICADAS)
-        // ============================================
-        const carImages = {
-            // Audi R8 - desportivo alemão
-            audi: "https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?w=600&h=400&fit=crop",
-            
-            // BMW M4 - coupé desportivo
-            bmw: "https://images.pexels.com/photos/1400615/pexels-photo-1400615.jpeg?w=600&h=400&fit=crop",
-            
-            // Ferrari F8 Tributo - supercarro italiano
-            ferrari: "https://images.pexels.com/photos/10591231/pexels-photo-10591231.jpeg?w=600&h=400&fit=crop",
-            
-            // Lamborghini Huracán - supercarro agressivo
-            lamborghini: "https://images.pexels.com/photos/1032483/pexels-photo-1032483.jpeg?w=600&h=400&fit=crop",
-            
-            // Porsche 911 Turbo - ícone alemão
-            porsche: "https://images.pexels.com/photos/860868/pexels-photo-860868.jpeg?w=600&h=400&fit=crop",
-            
-            // Mercedes-AMG GT - grand tourer
-            mercedes: "https://images.pexels.com/photos/2391113/pexels-photo-2391113.jpeg?w=600&h=400&fit=crop"
-        };
-        
-        // URLs alternativas (fallback - caso as principais falhem)
-        const fallbackImages = {
-            audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=600&h=400&fit=crop",
-            bmw: "https://images.pexels.com/photos/290275/2015-bmw-m4-coupe-290275.jpeg?w=600&h=400&fit=crop",
-            ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=600&h=400&fit=crop",
-            lamborghini: "https://images.pexels.com/photos/3802510/lamborghini-huracan-supercar-vehicle-3802510.jpeg?w=600&h=400&fit=crop",
-            porsche: "https://images.pexels.com/photos/220133/porsche-911-car-sports-car-220133.jpeg?w=600&h=400&fit=crop",
-            mercedes: "https://images.pexels.com/photos/1130036/mercedes-amg-gt-vehicle-car-1130036.jpeg?w=600&h=400&fit=crop"
-        };
-        
         // ============================================
         // VARIÁVEIS
         // ============================================
@@ -182,6 +137,24 @@
         let canvasH = 400;
         
         // ============================================
+        // API DE IMAGENS ALEATÓRIAS (Unsplash)
+        // ============================================
+        // Unsplash API - fotos aleatórias de carros desportivos
+        const API_URL = "https://source.unsplash.com/featured/600x400?sports-car";
+        const API_URLS = [
+            "https://source.unsplash.com/featured/600x400?sports-car",
+            "https://source.unsplash.com/featured/600x400?supercar",
+            "https://source.unsplash.com/featured/600x400?audi",
+            "https://source.unsplash.com/featured/600x400?bmw",
+            "https://source.unsplash.com/featured/600x400?ferrari",
+            "https://source.unsplash.com/featured/600x400?lamborghini",
+            "https://source.unsplash.com/featured/600x400?porsche",
+            "https://source.unsplash.com/featured/600x400?mercedes"
+        ];
+        
+        let currentImageIndex = 0;
+        
+        // ============================================
         // SETUP
         // ============================================
         function setup() {
@@ -192,11 +165,11 @@
             textAlign(CENTER, CENTER);
             fill(150);
             textSize(14);
-            text("🏎️ Clique em CARREGAR IMAGEM", width/2, height/2);
+            text("🏎️ Clique em NOVO CARRO ALEATÓRIO", width/2, height/2);
             
-            // Botão de carregar
-            let loadButton = select('#loadBtn');
-            loadButton.mousePressed(loadCarImage);
+            // Botão de novo carro
+            let randomBtn = select('#randomBtn');
+            randomBtn.mousePressed(loadRandomCar);
             
             // Filtros
             let allFilters = selectAll('.filter-btn');
@@ -241,36 +214,26 @@
         function setStatus(text, type) {
             let statusDiv = select('#statusMsg');
             statusDiv.html(text);
+            statusDiv.removeClass('status-default status-success status-error status-loading');
             
-            statusDiv.removeClass('status-default');
-            statusDiv.removeClass('status-success');
-            statusDiv.removeClass('status-error');
-            statusDiv.removeClass('status-loading');
-            
-            if (type === 'success') {
-                statusDiv.addClass('status-success');
-            } else if (type === 'error') {
-                statusDiv.addClass('status-error');
-            } else if (type === 'loading') {
-                statusDiv.addClass('status-loading');
-            } else {
-                statusDiv.addClass('status-default');
-            }
+            if (type === 'success') statusDiv.addClass('status-success');
+            else if (type === 'error') statusDiv.addClass('status-error');
+            else if (type === 'loading') statusDiv.addClass('status-loading');
+            else statusDiv.addClass('status-default');
         }
         
         // ============================================
-        // CARREGAR IMAGEM
+        // CARREGAR CARRO ALEATÓRIO
         // ============================================
-        function loadCarImage() {
-            let brand = select('#brandSelect').value();
-            let imgUrl = carImages[brand];
-            let brandName = select('#brandSelect').options[select('#brandSelect').selectedIndex].text;
+        function loadRandomCar() {
+            setStatus('⏳ A buscar carro aleatório...', 'loading');
             
-            setStatus(`⏳ A carregar ${brandName}...`, 'loading');
+            // Escolher uma URL aleatória
+            let randomIndex = floor(random(API_URLS.length));
+            let imgUrl = API_URLS[randomIndex] + "&" + Date.now(); // timestamp para evitar cache
             
             loadImage(imgUrl, 
                 (img) => {
-                    // Sucesso!
                     myImage = img;
                     
                     if (myImage.width !== canvasW || myImage.height !== canvasH) {
@@ -280,38 +243,18 @@
                     myImage.loadPixels();
                     originalPixelsCopy = [...myImage.pixels];
                     
-                    setStatus(`✅ ${brandName} carregado! Use os filtros.`, 'success');
+                    setStatus('✅ Carro carregado! Use os filtros.', 'success');
                     
                     resetFiltersUI();
                     image(myImage, 0, 0);
                 },
                 (err) => {
-                    console.log("Tentando imagem alternativa...");
-                    let fallbackUrl = fallbackImages[brand];
-                    loadImage(fallbackUrl, 
-                        (img2) => {
-                            myImage = img2;
-                            
-                            if (myImage.width !== canvasW || myImage.height !== canvasH) {
-                                myImage.resize(canvasW, canvasH);
-                            }
-                            
-                            myImage.loadPixels();
-                            originalPixelsCopy = [...myImage.pixels];
-                            
-                            setStatus(`✅ ${brandName} carregado! Use os filtros.`, 'success');
-                            
-                            resetFiltersUI();
-                            image(myImage, 0, 0);
-                        },
-                        (err2) => {
-                            setStatus(`❌ Erro ao carregar ${brandName}. Tente novamente.`, 'error');
-                            background(20);
-                            textAlign(CENTER, CENTER);
-                            fill(200);
-                            text(`❌ Erro ao carregar ${brandName}\nTente novamente`, width/2, height/2);
-                        }
-                    );
+                    console.error("Erro:", err);
+                    setStatus('❌ Erro ao carregar. Tente novamente.', 'error');
+                    background(20);
+                    textAlign(CENTER, CENTER);
+                    fill(200);
+                    text("❌ Erro ao carregar imagem\nTente novamente", width/2, height/2);
                 }
             );
         }
@@ -338,7 +281,7 @@
         // ============================================
         function resetImage() {
             if (!originalPixelsCopy || !myImage) {
-                setStatus('⚠️ Nenhuma imagem para resetar', 'error');
+                setStatus('⚠️ Carregue um carro primeiro', 'error');
                 return;
             }
             
@@ -350,9 +293,9 @@
             image(myImage, 0, 0);
             
             resetFiltersUI();
-            setStatus('🔄 Imagem resetada!', 'success');
+            setStatus('🔄 Filtros resetados!', 'success');
             setTimeout(() => {
-                setStatus('✅ Imagem carregada! Use os filtros.', 'success');
+                setStatus('✅ Use os filtros livremente!', 'success');
             }, 1500);
         }
         
@@ -508,7 +451,6 @@
                         newPixels[dstIdx] = myImage.pixels[srcIdx];
                         newPixels[dstIdx+1] = myImage.pixels[srcIdx+1];
                         newPixels[dstIdx+2] = myImage.pixels[srcIdx+2];
-                        newPixels[dstIdx+3] = myImage.pixels[srcIdx+3];
                     }
                 }
             }
@@ -520,7 +462,7 @@
         }
         
         function draw() {
-            // Não faz nada - tudo é tratado nos callbacks
+            // Não faz nada
         }
     </script>
 </body>
