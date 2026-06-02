@@ -1,11 +1,13 @@
 # MyDashboards - Dashboards Criativos com p5.js
 
+## 🌟 Visão Geral
+
 Este projeto consiste em dois dashboards interativos desenvolvidos com a biblioteca p5.js, integrando APIs públicas com **CORS habilitado** para criar visualizações de dados dinâmicas e experiências criativas.
 
 | Dashboard | Tipo | API | Funcionalidade Principal |
 |-----------|------|-----|--------------------------|
 | **GeoPulse** | Painel Informativo | ipapi.co | Geolocalização do usuário com globo 3D |
-| **Car Gallery** | Painel Interativo | Unsplash + CORS Proxy | Imagens de carros por marca + Carro decorativo p5.js |
+| **API Explorer** | Painel Interativo | JSONPlaceholder | Dados de utilizadores + Avatar interativo |
 
 ---
 
@@ -26,20 +28,21 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 - Coordenadas → Cor do globo e partículas
 - Localização → Ponto destacado no globo 3D
 
-### Dashboard 2 - Car Gallery (Unsplash + CORS Proxy)
+### Dashboard 2 - API Explorer (JSONPlaceholder)
 
 | Propriedade | Detalhe |
 |-------------|---------|
-| **Endpoint** | `https://unsplash.com/napi/search/photos` (via CORS proxy) |
+| **Endpoint** | `https://jsonplaceholder.typicode.com/users/{id}` |
 | **Método** | GET |
-| **CORS** | ✅ Habilitado (via proxy gratuito) |
+| **CORS** | ✅ Habilitado |
 | **Autenticação** | Nenhuma (gratuita) |
-| **Marcas disponíveis** | Audi, BMW, Ferrari, Lamborghini, Porsche, Mercedes, Tesla, Ford Mustang, Chevrolet Camaro, Toyota Supra |
+| **Dados retornados** | Nome, email, cidade, telefone, empresa |
 
-**Características:**
-- Busca imagens reais de carros da marca selecionada
-- Fallback com imagens SVG quando a API falha
-- Carro desportivo decorativo desenhado com primitivas p5.js (rect, ellipse, arc)
+**Interatividade oferecida:**
+- Botão para carregar utilizador aleatório
+- Slider para alterar a cor do avatar (matiz 0-360)
+- Slider para alterar o tamanho do avatar (40-150px)
+- Avatar desenhado com p5.js (círculo + inicial do nome)
 
 ---
 
@@ -57,33 +60,30 @@ Este projeto consiste em dois dashboards interativos desenvolvidos com a bibliot
 | ✅ Estrelas cintilantes | Fundo estelar com animação suave |
 | ✅ Design responsivo | Adapta-se a qualquer tamanho de ecrã |
 
-### Dashboard 2: Car Gallery
+### Dashboard 2: API Explorer
 
 | Funcionalidade | Descrição |
 |----------------|-----------|
-| ✅ 10+ marcas de carros | Audi, BMW, Ferrari, Lamborghini, Porsche, Mercedes, Tesla, Ford Mustang, Chevrolet Camaro, Toyota Supra |
-| ✅ API de imagens reais | Busca imagens via Unsplash (CORS ativo) |
-| ✅ Fallback SVG | Imagens de garantia quando a API falha |
-| ✅ Carro decorativo p5.js | Desenhado com rect(), ellipse(), arc() no canto inferior do canvas |
-| ✅ 7 filtros interativos | Pixelate, Glitch, Invert, Threshold, Emboss, Edge Detection, Reset |
-| ✅ Distorção radial | Efeito de lente em tempo real |
-| ✅ Saturação | Controle deslizante (0-200%) |
-| ✅ Brilho | Controle deslizante (-100 a +100) |
+| ✅ API gratuita | JSONPlaceholder - dados de utilizadores (CORS ativo) |
+| ✅ Utilizador aleatório | Botão carrega um utilizador diferente (ID 1-10) |
+| ✅ Exibição de dados | Mostra nome, email, cidade, telefone, empresa |
+| ✅ Avatar interativo | Desenhado com p5.js (círculo + inicial) |
+| ✅ Cor ajustável | Slider controla a matiz do avatar (0-360) |
+| ✅ Tamanho ajustável | Slider controla o diâmetro do avatar (40-150px) |
 
 ---
 
-## 🎛️ Filtros Disponíveis (Dashboard 2)
+## 🎛️ Interatividade do Dashboard 2
 
-| Filtro | Efeito | Manipulação |
-|--------|--------|-------------|
-| **Pixelate** | Efeito de pixelização | Agrupamento de pixels em blocos |
-| **Glitch** | Efeito glitch art | Deslocamento aleatório de pixels |
-| **Inverter** | Negativo da imagem | Inversão de cores (255 - valor) |
-| **Limiar (B&W)** | Preto e branco | Threshold baseado em luminância |
-| **Relevo** | Efeito 3D/emboss | Diferença entre pixels vizinhos |
-| **Detecção Bordas** | Realce de contornos | Gradiente entre pixels adjacentes |
+| Controlo | Efeito |
+|----------|--------|
+| **CARREGAR NOVO UTILIZADOR** | Busca um utilizador aleatório da API |
+| **Slider Cor** | Altera a cor do avatar em tempo real |
+| **Slider Tamanho** | Altera o tamanho do avatar em tempo real |
 
 ---
+
+## 🚀 Como Executar
 
 ### Acesso Online (GitHub Pages)
 https://pedrobabau.github.io/MyDashboards/
