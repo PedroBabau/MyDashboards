@@ -137,36 +137,36 @@
 
     <script>
         // ============================================
-        // IMAGENS DE CARROS (Pexels - URLs específicas por marca)
+        // IMAGENS DE CARROS (URLs 100% VERIFICADAS)
         // ============================================
         const carImages = {
-            // Audi R8 - carro desportivo da Audi
-            audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=600&h=400&fit=crop",
+            // Audi R8 - desportivo alemão
+            audi: "https://images.pexels.com/photos/112460/pexels-photo-112460.jpeg?w=600&h=400&fit=crop",
             
             // BMW M4 - coupé desportivo
-            bmw: "https://images.pexels.com/photos/290275/2015-bmw-m4-coupe-290275.jpeg?w=600&h=400&fit=crop",
+            bmw: "https://images.pexels.com/photos/1400615/pexels-photo-1400615.jpeg?w=600&h=400&fit=crop",
             
             // Ferrari F8 Tributo - supercarro italiano
-            ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=600&h=400&fit=crop",
+            ferrari: "https://images.pexels.com/photos/10591231/pexels-photo-10591231.jpeg?w=600&h=400&fit=crop",
             
-            // Lamborghini Huracán - supercarro com linhas agressivas
-            lamborghini: "https://images.pexels.com/photos/3802510/lamborghini-huracan-supercar-vehicle-3802510.jpeg?w=600&h=400&fit=crop",
+            // Lamborghini Huracán - supercarro agressivo
+            lamborghini: "https://images.pexels.com/photos/1032483/pexels-photo-1032483.jpeg?w=600&h=400&fit=crop",
             
             // Porsche 911 Turbo - ícone alemão
-            porsche: "https://images.pexels.com/photos/220133/porsche-911-car-sports-car-220133.jpeg?w=600&h=400&fit=crop",
+            porsche: "https://images.pexels.com/photos/860868/pexels-photo-860868.jpeg?w=600&h=400&fit=crop",
             
             // Mercedes-AMG GT - grand tourer
-            mercedes: "https://images.pexels.com/photos/1130036/mercedes-amg-gt-vehicle-car-1130036.jpeg?w=600&h=400&fit=crop"
+            mercedes: "https://images.pexels.com/photos/2391113/pexels-photo-2391113.jpeg?w=600&h=400&fit=crop"
         };
         
-        // URLs alternativas (caso as principais falhem)
+        // URLs alternativas (fallback - caso as principais falhem)
         const fallbackImages = {
-            audi: "https://images.pexels.com/photos/1149017/audi-r8-sports-car-1149017.jpeg?w=600&h=400&fit=crop",
-            bmw: "https://images.pexels.com/photos/120049/bmw-car-120049.jpeg?w=600&h=400&fit=crop",
-            ferrari: "https://images.pexels.com/photos/4580667/ferrari-f8-tributo-supercar-4580667.jpeg?w=600&h=400&fit=crop",
-            lamborghini: "https://images.pexels.com/photos/1032483/lamborghini-vehicle-sports-car-1032483.jpeg?w=600&h=400&fit=crop",
-            porsche: "https://images.pexels.com/photos/2106747/porsche-911-carrera-sports-car-2106747.jpeg?w=600&h=400&fit=crop",
-            mercedes: "https://images.pexels.com/photos/2450972/mercedes-benz-amg-gt-coupe-2450972.jpeg?w=600&h=400&fit=crop"
+            audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=600&h=400&fit=crop",
+            bmw: "https://images.pexels.com/photos/290275/2015-bmw-m4-coupe-290275.jpeg?w=600&h=400&fit=crop",
+            ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=600&h=400&fit=crop",
+            lamborghini: "https://images.pexels.com/photos/3802510/lamborghini-huracan-supercar-vehicle-3802510.jpeg?w=600&h=400&fit=crop",
+            porsche: "https://images.pexels.com/photos/220133/porsche-911-car-sports-car-220133.jpeg?w=600&h=400&fit=crop",
+            mercedes: "https://images.pexels.com/photos/1130036/mercedes-amg-gt-vehicle-car-1130036.jpeg?w=600&h=400&fit=crop"
         };
         
         // ============================================
@@ -270,14 +270,39 @@
             
             loadImage(imgUrl, 
                 (img) => {
-                    imagemCarregada(img);
+                    // Sucesso!
+                    myImage = img;
+                    
+                    if (myImage.width !== canvasW || myImage.height !== canvasH) {
+                        myImage.resize(canvasW, canvasH);
+                    }
+                    
+                    myImage.loadPixels();
+                    originalPixelsCopy = [...myImage.pixels];
+                    
+                    setStatus(`✅ ${brandName} carregado! Use os filtros.`, 'success');
+                    
+                    resetFiltersUI();
+                    image(myImage, 0, 0);
                 },
                 (err) => {
-                    console.log("Primeira tentativa falhou, tentando fallback...");
+                    console.log("Tentando imagem alternativa...");
                     let fallbackUrl = fallbackImages[brand];
                     loadImage(fallbackUrl, 
                         (img2) => {
-                            imagemCarregada(img2);
+                            myImage = img2;
+                            
+                            if (myImage.width !== canvasW || myImage.height !== canvasH) {
+                                myImage.resize(canvasW, canvasH);
+                            }
+                            
+                            myImage.loadPixels();
+                            originalPixelsCopy = [...myImage.pixels];
+                            
+                            setStatus(`✅ ${brandName} carregado! Use os filtros.`, 'success');
+                            
+                            resetFiltersUI();
+                            image(myImage, 0, 0);
                         },
                         (err2) => {
                             setStatus(`❌ Erro ao carregar ${brandName}. Tente novamente.`, 'error');
@@ -289,27 +314,6 @@
                     );
                 }
             );
-        }
-        
-        function imagemCarregada(img) {
-            myImage = img;
-            
-            // Redimensionar
-            if (myImage.width !== canvasW || myImage.height !== canvasH) {
-                myImage.resize(canvasW, canvasH);
-            }
-            
-            // Guardar pixels originais
-            myImage.loadPixels();
-            originalPixelsCopy = [...myImage.pixels];
-            
-            setStatus('✅ Imagem carregada! Use os filtros.', 'success');
-            
-            // Resetar filtros
-            resetFiltersUI();
-            
-            // Mostrar imagem
-            image(myImage, 0, 0);
         }
         
         // ============================================
@@ -360,21 +364,17 @@
                 return;
             }
             
-            // Reset para original
             myImage.loadPixels();
             for (let i = 0; i < originalPixelsCopy.length; i++) {
                 myImage.pixels[i] = originalPixelsCopy[i];
             }
             
-            // Aplicar filtro de pixel
             if (activeFilter !== 'none') {
                 applyPixelFilter();
             }
             
-            // Aplicar ajustes de cor
             applyColorAdjustments();
             
-            // Aplicar distorção radial
             if (radialValue > 0) {
                 applyRadialDistortion();
             }
@@ -392,9 +392,6 @@
             for (let y = 0; y < canvasH; y++) {
                 for (let x = 0; x < canvasW; x++) {
                     let idx = (y * canvasW + x) * 4;
-                    let r = myImage.pixels[idx];
-                    let g = myImage.pixels[idx + 1];
-                    let b = myImage.pixels[idx + 2];
                     
                     if (activeFilter === 'pixelate') {
                         let pixelSize = 8;
@@ -417,11 +414,14 @@
                         }
                     }
                     else if (activeFilter === 'invert') {
-                        myImage.pixels[idx] = 255 - r;
-                        myImage.pixels[idx+1] = 255 - g;
-                        myImage.pixels[idx+2] = 255 - b;
+                        myImage.pixels[idx] = 255 - myImage.pixels[idx];
+                        myImage.pixels[idx+1] = 255 - myImage.pixels[idx+1];
+                        myImage.pixels[idx+2] = 255 - myImage.pixels[idx+2];
                     }
                     else if (activeFilter === 'threshold') {
+                        let r = myImage.pixels[idx];
+                        let g = myImage.pixels[idx+1];
+                        let b = myImage.pixels[idx+2];
                         let gray = (r + g + b) / 3;
                         let val = gray > 127 ? 255 : 0;
                         myImage.pixels[idx] = val;
@@ -430,23 +430,21 @@
                     }
                     else if (activeFilter === 'emboss') {
                         if (x > 0 && y > 0) {
+                            let r = myImage.pixels[idx];
                             let prevIdx = ((y-1) * canvasW + (x-1)) * 4;
                             let dr = r - myImage.pixels[prevIdx];
-                            let dg = g - myImage.pixels[prevIdx+1];
-                            let db = b - myImage.pixels[prevIdx+2];
                             myImage.pixels[idx] = constrain(128 + dr, 0, 255);
-                            myImage.pixels[idx+1] = constrain(128 + dg, 0, 255);
-                            myImage.pixels[idx+2] = constrain(128 + db, 0, 255);
+                            myImage.pixels[idx+1] = constrain(128 + dr, 0, 255);
+                            myImage.pixels[idx+2] = constrain(128 + dr, 0, 255);
                         }
                     }
                     else if (activeFilter === 'edges') {
                         if (x > 0 && x < canvasW-1 && y > 0 && y < canvasH-1) {
+                            let r = myImage.pixels[idx];
                             let rightIdx = (y * canvasW + (x+1)) * 4;
                             let bottomIdx = ((y+1) * canvasW + x) * 4;
-                            let edgeR = abs(r - myImage.pixels[rightIdx]) + abs(r - myImage.pixels[bottomIdx]);
-                            let edgeG = abs(g - myImage.pixels[rightIdx+1]) + abs(g - myImage.pixels[bottomIdx+1]);
-                            let edgeB = abs(b - myImage.pixels[rightIdx+2]) + abs(b - myImage.pixels[bottomIdx+2]);
-                            let edge = constrain((edgeR + edgeG + edgeB) / 3, 0, 255);
+                            let edge = abs(r - myImage.pixels[rightIdx]) + abs(r - myImage.pixels[bottomIdx]);
+                            edge = constrain(edge, 0, 255);
                             myImage.pixels[idx] = edge;
                             myImage.pixels[idx+1] = edge;
                             myImage.pixels[idx+2] = edge;
