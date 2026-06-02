@@ -56,6 +56,11 @@
             font-weight: bold;
         }
         
+        button:hover {
+            transform: translateY(-2px);
+            transition: 0.2s;
+        }
+        
         .filter-btn {
             background: #334155;
             margin: 5px;
@@ -81,8 +86,12 @@
             margin-top: 15px;
             text-align: center;
             font-size: 12px;
-            color: #94a3b8;
         }
+        
+        .status-success { color: #4ade80; background: #0f172a; }
+        .status-error { color: #f87171; background: #0f172a; }
+        .status-loading { color: #fbbf24; background: #0f172a; }
+        .status-default { color: #94a3b8; background: #0f172a; }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 </head>
@@ -96,9 +105,9 @@
                 <option value="audi">Audi R8</option>
                 <option value="bmw">BMW M4</option>
                 <option value="ferrari">Ferrari F8</option>
-                <option value="lamborghini">Lamborghini</option>
+                <option value="lamborghini">Lamborghini Huracán</option>
                 <option value="porsche">Porsche 911</option>
-                <option value="mercedes">Mercedes AMG</option>
+                <option value="mercedes">Mercedes-AMG GT</option>
             </select>
             
             <button id="loadBtn">🔍 CARREGAR IMAGEM</button>
@@ -113,40 +122,30 @@
                 <button class="filter-btn" data-filter="reset">Reset</button>
             </div>
             
-            <label>🌀 Distorção: <span id="radialVal">0</span></label>
-            <input type="range" id="radialSlider" min="0" max="100" value="0">
+            <label>🌀 Distorção Radial: <span id="radialVal">0</span></label>
+            <input type="range" id="radialSlider" min="0" max="100" value="0" step="1">
             
             <label>🌈 Saturação: <span id="satVal">100</span>%</label>
-            <input type="range" id="satSlider" min="0" max="200" value="100">
+            <input type="range" id="satSlider" min="0" max="200" value="100" step="1">
             
             <label>🔆 Brilho: <span id="brightVal">0</span></label>
-            <input type="range" id="brightSlider" min="-100" max="100" value="0">
+            <input type="range" id="brightSlider" min="-100" max="100" value="0" step="1">
             
-            <div id="statusMsg" class="status">💡 Selecione uma marca e clique em CARREGAR</div>
+            <div id="statusMsg" class="status-default">💡 Selecione uma marca e clique em CARREGAR</div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // IMAGENS DE CARROS (via ImgBB - URLs diretas)
+        // IMAGENS DE CARROS (Pexels - funcionam com CORS)
         // ============================================
         const carImages = {
-            audi: "https://i.ibb.co/cQJzTp5/audi-r8.jpg",
-            bmw: "https://i.ibb.co/HhV2fKb/bmw-m4.jpg",
-            ferrari: "https://i.ibb.co/ZfcCqQz/ferrari-f8.jpg",
-            lamborghini: "https://i.ibb.co/2Yk2f6L/lamborghini.jpg",
-            porsche: "https://i.ibb.co/x7v5nLQ/porsche-911.jpg",
-            mercedes: "https://i.ibb.co/zHjyrJV/mercedes-amg.jpg"
-        };
-        
-        // URLs alternativas (Pexels - caso as acima falhem)
-        const pexelsImages = {
-            audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=500&h=400&fit=crop",
-            bmw: "https://images.pexels.com/photos/290275/pexels-photo-290275.jpeg?w=500&h=400&fit=crop",
-            ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=500&h=400&fit=crop",
-            lamborghini: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?w=500&h=400&fit=crop",
-            porsche: "https://images.pexels.com/photos/220133/pexels-photo-220133.jpeg?w=500&h=400&fit=crop",
-            mercedes: "https://images.pexels.com/photos/1130036/pexels-photo-1130036.jpeg?w=500&h=400&fit=crop"
+            audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=600&h=400&fit=crop",
+            bmw: "https://images.pexels.com/photos/290275/pexels-photo-290275.jpeg?w=600&h=400&fit=crop",
+            ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=600&h=400&fit=crop",
+            lamborghini: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?w=600&h=400&fit=crop",
+            porsche: "https://images.pexels.com/photos/220133/pexels-photo-220133.jpeg?w=600&h=400&fit=crop",
+            mercedes: "https://images.pexels.com/photos/1130036/pexels-photo-1130036.jpeg?w=600&h=400&fit=crop"
         };
         
         // ============================================
@@ -158,9 +157,8 @@
         let radialValue = 0;
         let saturationValue = 100;
         let brightnessValue = 0;
-        let canvasW = 500;
+        let canvasW = 600;
         let canvasH = 400;
-        let retryCount = 0;
         
         // ============================================
         // SETUP
@@ -177,7 +175,7 @@
             
             // Botão de carregar
             let loadButton = select('#loadBtn');
-            loadButton.mousePressed(() => loadCarImage());
+            loadButton.mousePressed(loadCarImage);
             
             // Filtros
             let allFilters = selectAll('.filter-btn');
@@ -217,56 +215,76 @@
         }
         
         // ============================================
+        // FUNÇÃO PARA ATUALIZAR STATUS
+        // ============================================
+        function setStatus(text, type) {
+            let statusDiv = select('#statusMsg');
+            statusDiv.html(text);
+            
+            // Remover todas as classes de estilo
+            statusDiv.removeClass('status-default');
+            statusDiv.removeClass('status-success');
+            statusDiv.removeClass('status-error');
+            statusDiv.removeClass('status-loading');
+            
+            // Adicionar a classe correta
+            if (type === 'success') {
+                statusDiv.addClass('status-success');
+            } else if (type === 'error') {
+                statusDiv.addClass('status-error');
+            } else if (type === 'loading') {
+                statusDiv.addClass('status-loading');
+            } else {
+                statusDiv.addClass('status-default');
+            }
+        }
+        
+        // ============================================
         // CARREGAR IMAGEM
         // ============================================
         function loadCarImage() {
             let brand = select('#brandSelect').value();
-            let statusDiv = select('#statusMsg');
-            
-            // Usar primeiro as imagens do ImgBB
             let imgUrl = carImages[brand];
             
-            statusDiv.html('⏳ A carregar imagem...');
+            setStatus('⏳ A carregar imagem...', 'loading');
             
             loadImage(imgUrl, 
                 (img) => {
-                    imagemCarregadaComSucesso(img, statusDiv);
+                    // Sucesso!
+                    myImage = img;
+                    
+                    // Redimensionar
+                    if (myImage.width !== canvasW || myImage.height !== canvasH) {
+                        myImage.resize(canvasW, canvasH);
+                    }
+                    
+                    // Guardar pixels originais
+                    myImage.loadPixels();
+                    originalPixelsCopy = [...myImage.pixels];
+                    
+                    setStatus('✅ Imagem carregada! Use os filtros.', 'success');
+                    
+                    // Resetar filtros
+                    resetFiltersUI();
+                    
+                    // Mostrar imagem
+                    image(myImage, 0, 0);
                 },
                 (err) => {
-                    console.log("ImgBB falhou, tentando Pexels...");
-                    // Tentar com Pexels
-                    let pexelsUrl = pexelsImages[brand];
-                    loadImage(pexelsUrl, 
-                        (img2) => {
-                            imagemCarregadaComSucesso(img2, statusDiv);
-                        },
-                        (err2) => {
-                            console.error("Ambas as fontes falharam");
-                            statusDiv.html('❌ Erro ao carregar imagem. Tente novamente.');
-                            background(20);
-                            textAlign(CENTER, CENTER);
-                            text("❌ Erro ao carregar imagem\nVerifique sua internet", width/2, height/2);
-                        }
-                    );
+                    console.error('Erro ao carregar:', err);
+                    setStatus('❌ Erro ao carregar imagem. Tente novamente.', 'error');
+                    background(20);
+                    textAlign(CENTER, CENTER);
+                    fill(200);
+                    text("❌ Erro ao carregar imagem\nTente novamente", width/2, height/2);
                 }
             );
         }
         
-        function imagemCarregadaComSucesso(img, statusDiv) {
-            myImage = img;
-            
-            // Redimensionar
-            if (myImage.width !== canvasW || myImage.height !== canvasH) {
-                myImage.resize(canvasW, canvasH);
-            }
-            
-            // Guardar pixels
-            myImage.loadPixels();
-            originalPixelsCopy = [...myImage.pixels];
-            
-            statusDiv.html('✅ Imagem carregada! Use os filtros.');
-            
-            // Resetar filtros
+        // ============================================
+        // RESETAR INTERFACE
+        // ============================================
+        function resetFiltersUI() {
             activeFilter = 'none';
             radialValue = 0;
             saturationValue = 100;
@@ -278,9 +296,6 @@
             select('#radialVal').html('0');
             select('#satVal').html('100');
             select('#brightVal').html('0');
-            
-            // Mostrar imagem
-            image(myImage, 0, 0);
         }
         
         // ============================================
@@ -288,6 +303,7 @@
         // ============================================
         function resetImage() {
             if (!originalPixelsCopy || !myImage) {
+                setStatus('⚠️ Nenhuma imagem para resetar', 'error');
                 return;
             }
             
@@ -298,18 +314,11 @@
             myImage.updatePixels();
             image(myImage, 0, 0);
             
-            // Resetar valores
-            activeFilter = 'none';
-            radialValue = 0;
-            saturationValue = 100;
-            brightnessValue = 0;
-            
-            select('#radialSlider').value(0);
-            select('#satSlider').value(100);
-            select('#brightSlider').value(0);
-            select('#radialVal').html('0');
-            select('#satVal').html('100');
-            select('#brightVal').html('0');
+            resetFiltersUI();
+            setStatus('🔄 Imagem resetada!', 'success');
+            setTimeout(() => {
+                setStatus('✅ Imagem carregada! Use os filtros.', 'success');
+            }, 1500);
         }
         
         // ============================================
@@ -482,7 +491,7 @@
         }
         
         function draw() {
-            // Não faz nada
+            // Não faz nada - tudo é tratado nos callbacks
         }
     </script>
 </body>
