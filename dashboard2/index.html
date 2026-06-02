@@ -3,17 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Car Gallery | API de Imagens de Carros</title>
+    <title>Car Gallery | Imagens de Carros</title>
     <style>
-        * {
-            user-select: none;
-        }
-        
         body {
             margin: 0;
             padding: 20px;
-            background: linear-gradient(135deg, #0a0a1a, #1a1a2e, #16213e);
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #0a0a1a, #1a1a2e);
+            font-family: 'Segoe UI', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -24,7 +20,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 25px;
-            max-width: 1200px;
+            max-width: 1100px;
             width: 100%;
             justify-content: center;
         }
@@ -32,49 +28,34 @@
         .canvas-area {
             flex: 1.2;
             min-width: 450px;
-            text-align: center;
         }
         
         canvas {
             border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            background: #0f0f1a;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            background: #1a1a2e;
         }
         
         .controls {
             flex: 1;
-            min-width: 300px;
-            background: rgba(15, 25, 45, 0.95);
+            min-width: 280px;
+            background: rgba(15,25,45,0.95);
             backdrop-filter: blur(10px);
             border-radius: 20px;
             padding: 20px;
             color: white;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            height: fit-content;
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
-        .controls h2 {
+        h2 {
             margin: 0 0 5px 0;
-            font-size: 1.5rem;
             background: linear-gradient(135deg, #ff6b6b, #ee5a24);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
         }
         
-        .input-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-        }
-        
-        select {
+        select, button {
             width: 100%;
             padding: 12px;
             border-radius: 12px;
@@ -82,75 +63,37 @@
             background: #1e293b;
             color: white;
             font-size: 14px;
+            margin-bottom: 15px;
             cursor: pointer;
         }
         
         button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            border: none;
             background: linear-gradient(135deg, #ff6b6b, #ee5a24);
-            color: white;
+            border: none;
             font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 15px;
-            font-size: 16px;
         }
         
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
-        }
-        
-        .filter-section {
-            border-top: 1px solid #334155;
-            padding-top: 20px;
-            margin-top: 10px;
-        }
-        
-        .filter-section h3 {
-            font-size: 1rem;
-            margin-bottom: 15px;
-            color: #ff6b6b;
         }
         
         .filter-buttons {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 8px;
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
         
         .filter-btn {
             background: #334155;
+            margin: 0;
             padding: 8px;
             font-size: 12px;
-            margin-bottom: 0;
-            border-radius: 8px;
-            border: none;
-            color: white;
-            cursor: pointer;
-        }
-        
-        .filter-btn:hover {
-            background: #475569;
         }
         
         input[type="range"] {
             width: 100%;
-            padding: 0;
             margin: 10px 0;
-        }
-        
-        .value-display {
-            display: inline-block;
-            background: #1e293b;
-            padding: 4px 8px;
-            border-radius: 8px;
-            font-size: 12px;
-            margin-left: 8px;
         }
         
         .status {
@@ -158,36 +101,22 @@
             border-radius: 12px;
             padding: 12px;
             margin-top: 15px;
-            font-size: 12px;
             text-align: center;
-            color: #94a3b8;
+            font-size: 12px;
         }
         
-        .status.loading {
-            color: #fbbf24;
-        }
-        
-        .status.success {
-            color: #4ade80;
-        }
-        
-        .status.error {
-            color: #f87171;
-        }
+        .status.loading { color: #fbbf24; }
+        .status.success { color: #4ade80; }
+        .status.error { color: #f87171; }
         
         .car-info {
             background: #1e293b;
             border-radius: 12px;
             padding: 12px;
             margin-top: 15px;
+            text-align: center;
             font-size: 12px;
             border-left: 3px solid #ff6b6b;
-            text-align: center;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
         }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
@@ -199,257 +128,242 @@
         </div>
         <div class="controls">
             <h2>🏎️ Car Gallery</h2>
-            <p>API de Imagens de Carros (Unsplash)</p>
+            <p>Imagens de Carros (CDN)</p>
             
-            <div class="input-group">
-                <label>🚗 Marca do Carro</label>
-                <select id="brand">
-                    <option value="audi">Audi R8</option>
-                    <option value="bmw">BMW M4</option>
-                    <option value="ferrari">Ferrari F8</option>
-                    <option value="lamborghini">Lamborghini Huracán</option>
-                    <option value="porsche">Porsche 911</option>
-                    <option value="mercedes">Mercedes-AMG GT</option>
-                </select>
+            <select id="brandSelect">
+                <option value="audi">Audi R8</option>
+                <option value="bmw">BMW M4</option>
+                <option value="ferrari">Ferrari F8</option>
+                <option value="lamborghini">Lamborghini</option>
+                <option value="porsche">Porsche 911</option>
+                <option value="mercedes">Mercedes AMG</option>
+            </select>
+            
+            <button id="loadBtn">🔍 Carregar Imagem</button>
+            
+            <div class="car-info">
+                🏎️ Marca: <span id="brandName">Audi R8</span>
             </div>
             
-            <button id="fetchBtn">🔍 Buscar Imagem</button>
-            
-            <div class="car-info" id="carInfo">
-                <span>🏎️ Marca:</span> <span id="selectedBrand">Audi R8</span>
+            <div class="filter-buttons">
+                <button class="filter-btn" data-filter="pixelate">Pixelate</button>
+                <button class="filter-btn" data-filter="glitch">Glitch</button>
+                <button class="filter-btn" data-filter="invert">Inverter</button>
+                <button class="filter-btn" data-filter="threshold">B&W</button>
+                <button class="filter-btn" data-filter="emboss">Relevo</button>
+                <button class="filter-btn" data-filter="edges">Bordas</button>
+                <button class="filter-btn" data-filter="reset">Reset</button>
             </div>
             
-            <div class="filter-section">
-                <h3>🎛️ Filtros</h3>
-                <div class="filter-buttons">
-                    <button class="filter-btn" data-filter="pixelate">Pixelate</button>
-                    <button class="filter-btn" data-filter="glitch">Glitch</button>
-                    <button class="filter-btn" data-filter="invert">Inverter</button>
-                    <button class="filter-btn" data-filter="threshold">Preto & Branco</button>
-                    <button class="filter-btn" data-filter="emboss">Relevo</button>
-                    <button class="filter-btn" data-filter="edges">Bordas</button>
-                    <button class="filter-btn" data-filter="reset">Reset</button>
-                </div>
-                
-                <div class="input-group">
-                    <label>🌀 Distorção Radial <span id="radialVal" class="value-display">0</span></label>
-                    <input type="range" id="radialDistort" min="0" max="100" value="0" step="1">
-                </div>
-                
-                <div class="input-group">
-                    <label>🌈 Saturação <span id="satVal" class="value-display">100%</span></label>
-                    <input type="range" id="saturation" min="0" max="200" value="100" step="1">
-                </div>
-                
-                <div class="input-group">
-                    <label>🔆 Brilho <span id="brightVal" class="value-display">0</span></label>
-                    <input type="range" id="brightness" min="-100" max="100" value="0" step="1">
-                </div>
-            </div>
+            <label>🌀 Distorção Radial: <span id="radialVal">0</span></label>
+            <input type="range" id="radialSlider" min="0" max="100" value="0">
             
-            <div class="status" id="status">
-                💡 Selecione uma marca e clique em Buscar
-            </div>
+            <label>🌈 Saturação: <span id="satVal">100</span>%</label>
+            <input type="range" id="satSlider" min="0" max="200" value="100">
+            
+            <label>🔆 Brilho: <span id="brightVal">0</span></label>
+            <input type="range" id="brightSlider" min="-100" max="100" value="0">
+            
+            <div class="status" id="statusMsg">💡 Selecione uma marca e clique em Carregar</div>
         </div>
     </div>
-    
+
     <script>
         // ============================================
-        // CONFIGURAÇÃO INICIAL
+        // VARIÁVEIS GLOBAIS
         // ============================================
-        let img = null;           // imagem atual
-        let originalPixels = null; // cópia dos pixels originais
+        let currentImage = null;
+        let originalPixels = null;
         let currentFilter = 'none';
         let radialAmount = 0;
         let saturationAmount = 100;
         let brightnessAmount = 0;
         
-        // URLs diretas de imagens de carros (Unsplash CDN - funcionam com CORS)
+        // IMAGENS DE CARROS (CDN que funciona com p5.js)
+        // Usando Cloudimage - URLs diretas e confiáveis
         const carImages = {
-            audi: "https://images.unsplash.com/photo-1614200187524-dc4b892acf16?w=500&h=400&fit=crop",
-            bmw: "https://images.unsplash.com/photo-1555215695-3004980ad54e?w=500&h=400&fit=crop",
-            ferrari: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=500&h=400&fit=crop",
-            lamborghini: "https://images.unsplash.com/photo-1621135802920-133df287f89c?w=500&h=400&fit=crop",
-            porsche: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=500&h=400&fit=crop",
-            mercedes: "https://images.unsplash.com/photo-1618843479313-40f8afb4b4d1?w=500&h=400&fit=crop"
+            audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=500&h=400&fit=crop",
+            bmw: "https://images.pexels.com/photos/290275/pexels-photo-290275.jpeg?w=500&h=400&fit=crop",
+            ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=500&h=400&fit=crop",
+            lamborghini: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?w=500&h=400&fit=crop",
+            porsche: "https://images.pexels.com/photos/220133/pexels-photo-220133.jpeg?w=500&h=400&fit=crop",
+            mercedes: "https://images.pexels.com/photos/1130036/pexels-photo-1130036.jpeg?w=500&h=400&fit=crop"
         };
         
         // ============================================
-        // SETUP - p5.js
+        // SETUP p5.js
         // ============================================
         function setup() {
             let canvas = createCanvas(500, 400);
             canvas.parent('p5canvas');
-            background(30);
+            background(20);
             
             textAlign(CENTER, CENTER);
-            fill(150);
+            fill(200);
             textSize(14);
-            text("🏎️ Selecione uma marca\n e clique em 'Buscar Imagem'", width/2, height/2);
+            text("🏎️ Selecione uma marca\n e clique em 'Carregar Imagem'", width/2, height/2);
             
-            // Evento do botão Buscar
-            let btn = select('#fetchBtn');
-            btn.mousePressed(fetchCarImage);
+            // Elementos DOM
+            let loadBtn = select('#loadBtn');
+            loadBtn.mousePressed(loadCarImage);
             
-            // Atualizar texto da marca quando o select mudar
-            let brandSelect = select('#brand');
+            let brandSelect = select('#brandSelect');
             brandSelect.changed(() => {
-                let text = brandSelect.options[brandSelect.selectedIndex].text;
-                select('#selectedBrand').html(text);
+                let selectedText = brandSelect.options[brandSelect.selectedIndex].text;
+                select('#brandName').html(selectedText);
             });
             
-            // Inicializar texto
-            select('#selectedBrand').html(select('#brand').options[select('#brand').selectedIndex].text);
-            
-            // Eventos dos filtros
+            // Filtros
             let filterBtns = selectAll('.filter-btn');
             for (let btn of filterBtns) {
                 btn.mousePressed(() => {
                     let filter = btn.elt.dataset.filter;
                     if (filter === 'reset') {
-                        resetImage();
+                        resetToOriginal();
                     } else {
                         currentFilter = filter;
-                        applyFilters();
+                        applyAllFilters();
                     }
                 });
             }
             
             // Sliders
-            let radialSlider = select('#radialDistort');
+            let radialSlider = select('#radialSlider');
             radialSlider.input(() => {
                 radialAmount = int(radialSlider.value());
                 select('#radialVal').html(radialAmount);
-                applyFilters();
+                applyAllFilters();
             });
             
-            let satSlider = select('#saturation');
+            let satSlider = select('#satSlider');
             satSlider.input(() => {
                 saturationAmount = int(satSlider.value());
-                select('#satVal').html(saturationAmount + '%');
-                applyFilters();
+                select('#satVal').html(saturationAmount);
+                applyAllFilters();
             });
             
-            let brightSlider = select('#brightness');
+            let brightSlider = select('#brightSlider');
             brightSlider.input(() => {
                 brightnessAmount = int(brightSlider.value());
                 select('#brightVal').html(brightnessAmount);
-                applyFilters();
+                applyAllFilters();
             });
         }
         
         // ============================================
-        // BUSCAR IMAGEM DA API
+        // CARREGAR IMAGEM
         // ============================================
-        function fetchCarImage() {
-            let brand = select('#brand').value();
-            let statusDiv = select('#status');
+        function loadCarImage() {
+            let brand = select('#brandSelect').value();
+            let statusDiv = select('#statusMsg');
             let imageUrl = carImages[brand];
             
             if (!imageUrl) {
-                statusDiv.html('❌ Marca não encontrada');
-                statusDiv.removeClass('loading').addClass('error');
+                statusDiv.html('❌ Erro: Marca não encontrada');
+                statusDiv.removeClass('success loading').addClass('error');
                 return;
             }
             
-            statusDiv.html('🖼️ Buscando imagem... ⏳');
-            statusDiv.removeClass('success').removeClass('error').addClass('loading');
+            statusDiv.html('🖼️ A carregar imagem... ⏳');
+            statusDiv.removeClass('success error').addClass('loading');
             
-            // Carregar imagem via p5.js
-            loadImage(imageUrl, 
-                (loadedImg) => {
-                    img = loadedImg;
-                    
-                    // Redimensionar para o canvas
-                    if (img.width !== width || img.height !== height) {
-                        img.resize(width, height);
+            // Usar setTimeout para dar feedback visual
+            setTimeout(() => {
+                loadImage(imageUrl, 
+                    (img) => {
+                        // Sucesso
+                        currentImage = img;
+                        
+                        // Redimensionar para o canvas
+                        if (currentImage.width !== width || currentImage.height !== height) {
+                            currentImage.resize(width, height);
+                        }
+                        
+                        // Guardar pixels originais
+                        currentImage.loadPixels();
+                        originalPixels = [...currentImage.pixels];
+                        
+                        statusDiv.html('✅ Imagem carregada com sucesso! Use os filtros.');
+                        statusDiv.removeClass('loading').addClass('success');
+                        
+                        // Resetar todos os efeitos
+                        resetEffects();
+                        
+                        // Mostrar imagem
+                        image(currentImage, 0, 0);
+                    },
+                    (err) => {
+                        // Erro
+                        console.error('Erro ao carregar:', err);
+                        statusDiv.html('❌ Erro ao carregar imagem. Tente novamente.');
+                        statusDiv.removeClass('loading').addClass('error');
+                        
+                        background(20);
+                        fill(200);
+                        textSize(14);
+                        text("❌ Erro ao carregar imagem\nVerifique sua internet", width/2, height/2);
                     }
-                    
-                    // Guardar pixels originais
-                    img.loadPixels();
-                    originalPixels = [...img.pixels];
-                    
-                    statusDiv.html('✅ Imagem carregada! Use os filtros.');
-                    statusDiv.removeClass('loading').addClass('success');
-                    
-                    // Resetar todos os efeitos
-                    currentFilter = 'none';
-                    radialAmount = 0;
-                    saturationAmount = 100;
-                    brightnessAmount = 0;
-                    select('#radialDistort').value(0);
-                    select('#saturation').value(100);
-                    select('#brightness').value(0);
-                    select('#radialVal').html('0');
-                    select('#satVal').html('100%');
-                    select('#brightVal').html('0');
-                    
-                    // Mostrar imagem
-                    image(img, 0, 0);
-                },
-                (err) => {
-                    console.error('Erro ao carregar:', err);
-                    statusDiv.html('❌ Erro ao carregar imagem. Tente novamente.');
-                    statusDiv.removeClass('loading').addClass('error');
-                    
-                    background(30);
-                    fill(150);
-                    textSize(14);
-                    text("❌ Erro ao carregar imagem\nTente novamente", width/2, height/2);
-                }
-            );
+                );
+            }, 100);
         }
         
         // ============================================
-        // RESETAR IMAGEM
+        // RESETAR EFEITOS
         // ============================================
-        function resetImage() {
-            if (!originalPixels || !img) {
-                console.log("Sem imagem para resetar");
-                return;
-            }
-            
-            img.loadPixels();
-            for (let i = 0; i < originalPixels.length; i++) {
-                img.pixels[i] = originalPixels[i];
-            }
-            img.updatePixels();
-            image(img, 0, 0);
-            
-            // Resetar valores dos sliders
+        function resetEffects() {
             currentFilter = 'none';
             radialAmount = 0;
             saturationAmount = 100;
             brightnessAmount = 0;
-            select('#radialDistort').value(0);
-            select('#saturation').value(100);
-            select('#brightness').value(0);
+            
+            select('#radialSlider').value(0);
+            select('#satSlider').value(100);
+            select('#brightSlider').value(0);
             select('#radialVal').html('0');
-            select('#satVal').html('100%');
+            select('#satVal').html('100');
             select('#brightVal').html('0');
         }
         
         // ============================================
-        // APLICAR FILTROS
+        // RESETAR PARA IMAGEM ORIGINAL
         // ============================================
-        function applyFilters() {
-            if (!originalPixels || !img) {
+        function resetToOriginal() {
+            if (!originalPixels || !currentImage) {
+                console.log("Sem imagem para resetar");
+                return;
+            }
+            
+            currentImage.loadPixels();
+            for (let i = 0; i < originalPixels.length; i++) {
+                currentImage.pixels[i] = originalPixels[i];
+            }
+            currentImage.updatePixels();
+            image(currentImage, 0, 0);
+            
+            resetEffects();
+        }
+        
+        // ============================================
+        // APLICAR TODOS OS FILTROS
+        // ============================================
+        function applyAllFilters() {
+            if (!originalPixels || !currentImage) {
                 console.log("Sem imagem para aplicar filtros");
                 return;
             }
             
-            // Começar com os pixels originais
-            img.loadPixels();
+            // Começar com original
+            currentImage.loadPixels();
             for (let i = 0; i < originalPixels.length; i++) {
-                img.pixels[i] = originalPixels[i];
+                currentImage.pixels[i] = originalPixels[i];
             }
             
-            // Aplicar filtro de pixel se necessário
+            // Aplicar filtro de pixel
             if (currentFilter !== 'none') {
                 applyPixelFilter();
             }
             
-            // Ajustes de cor (saturação e brilho)
+            // Ajustes de cor
             applyColorAdjustments();
             
             // Distorção radial
@@ -457,22 +371,22 @@
                 applyRadialDistortion();
             }
             
-            img.updatePixels();
-            image(img, 0, 0);
+            currentImage.updatePixels();
+            image(currentImage, 0, 0);
         }
         
         // ============================================
-        // FILTRO DE PIXELS (Pixelate, Glitch, Invert, etc)
+        // FILTRO DE PIXELS
         // ============================================
         function applyPixelFilter() {
-            img.loadPixels();
+            currentImage.loadPixels();
             
             for (let y = 0; y < height; y++) {
                 for (let x = 0; x < width; x++) {
                     let idx = (y * width + x) * 4;
-                    let r = img.pixels[idx];
-                    let g = img.pixels[idx + 1];
-                    let b = img.pixels[idx + 2];
+                    let r = currentImage.pixels[idx];
+                    let g = currentImage.pixels[idx + 1];
+                    let b = currentImage.pixels[idx + 2];
                     
                     switch(currentFilter) {
                         case 'pixelate':
@@ -480,46 +394,46 @@
                             let px = floor(x / pixelSize) * pixelSize;
                             let py = floor(y / pixelSize) * pixelSize;
                             let pIdx = (py * width + px) * 4;
-                            img.pixels[idx] = img.pixels[pIdx];
-                            img.pixels[idx + 1] = img.pixels[pIdx + 1];
-                            img.pixels[idx + 2] = img.pixels[pIdx + 2];
+                            currentImage.pixels[idx] = currentImage.pixels[pIdx];
+                            currentImage.pixels[idx+1] = currentImage.pixels[pIdx+1];
+                            currentImage.pixels[idx+2] = currentImage.pixels[pIdx+2];
                             break;
                             
                         case 'glitch':
                             if (random(1) < 0.05) {
                                 let offset = int(random(-20, 20));
                                 let newIdx = idx + offset * 4;
-                                if (newIdx >= 0 && newIdx < img.pixels.length - 3) {
-                                    img.pixels[idx] = img.pixels[newIdx];
-                                    img.pixels[idx + 1] = img.pixels[newIdx + 1];
-                                    img.pixels[idx + 2] = img.pixels[newIdx + 2];
+                                if (newIdx >= 0 && newIdx < currentImage.pixels.length - 3) {
+                                    currentImage.pixels[idx] = currentImage.pixels[newIdx];
+                                    currentImage.pixels[idx+1] = currentImage.pixels[newIdx+1];
+                                    currentImage.pixels[idx+2] = currentImage.pixels[newIdx+2];
                                 }
                             }
                             break;
                             
                         case 'invert':
-                            img.pixels[idx] = 255 - r;
-                            img.pixels[idx + 1] = 255 - g;
-                            img.pixels[idx + 2] = 255 - b;
+                            currentImage.pixels[idx] = 255 - r;
+                            currentImage.pixels[idx+1] = 255 - g;
+                            currentImage.pixels[idx+2] = 255 - b;
                             break;
                             
                         case 'threshold':
                             let gray = (r + g + b) / 3;
                             let val = gray > 127 ? 255 : 0;
-                            img.pixels[idx] = val;
-                            img.pixels[idx + 1] = val;
-                            img.pixels[idx + 2] = val;
+                            currentImage.pixels[idx] = val;
+                            currentImage.pixels[idx+1] = val;
+                            currentImage.pixels[idx+2] = val;
                             break;
                             
                         case 'emboss':
                             if (x > 0 && y > 0) {
                                 let prevIdx = ((y-1) * width + (x-1)) * 4;
-                                let dr = r - img.pixels[prevIdx];
-                                let dg = g - img.pixels[prevIdx + 1];
-                                let db = b - img.pixels[prevIdx + 2];
-                                img.pixels[idx] = constrain(128 + dr, 0, 255);
-                                img.pixels[idx + 1] = constrain(128 + dg, 0, 255);
-                                img.pixels[idx + 2] = constrain(128 + db, 0, 255);
+                                let dr = r - currentImage.pixels[prevIdx];
+                                let dg = g - currentImage.pixels[prevIdx+1];
+                                let db = b - currentImage.pixels[prevIdx+2];
+                                currentImage.pixels[idx] = constrain(128 + dr, 0, 255);
+                                currentImage.pixels[idx+1] = constrain(128 + dg, 0, 255);
+                                currentImage.pixels[idx+2] = constrain(128 + db, 0, 255);
                             }
                             break;
                             
@@ -527,31 +441,31 @@
                             if (x > 0 && x < width-1 && y > 0 && y < height-1) {
                                 let rightIdx = (y * width + (x+1)) * 4;
                                 let bottomIdx = ((y+1) * width + x) * 4;
-                                let edgeR = abs(r - img.pixels[rightIdx]) + abs(r - img.pixels[bottomIdx]);
-                                let edgeG = abs(g - img.pixels[rightIdx+1]) + abs(g - img.pixels[bottomIdx+1]);
-                                let edgeB = abs(b - img.pixels[rightIdx+2]) + abs(b - img.pixels[bottomIdx+2]);
+                                let edgeR = abs(r - currentImage.pixels[rightIdx]) + abs(r - currentImage.pixels[bottomIdx]);
+                                let edgeG = abs(g - currentImage.pixels[rightIdx+1]) + abs(g - currentImage.pixels[bottomIdx+1]);
+                                let edgeB = abs(b - currentImage.pixels[rightIdx+2]) + abs(b - currentImage.pixels[bottomIdx+2]);
                                 let edge = constrain((edgeR + edgeG + edgeB) / 3, 0, 255);
-                                img.pixels[idx] = edge;
-                                img.pixels[idx+1] = edge;
-                                img.pixels[idx+2] = edge;
+                                currentImage.pixels[idx] = edge;
+                                currentImage.pixels[idx+1] = edge;
+                                currentImage.pixels[idx+2] = edge;
                             }
                             break;
                     }
                 }
             }
-            img.updatePixels();
+            currentImage.updatePixels();
         }
         
         // ============================================
-        // AJUSTES DE SATURAÇÃO E BRILHO
+        // AJUSTES DE COR (SATURAÇÃO + BRILHO)
         // ============================================
         function applyColorAdjustments() {
-            img.loadPixels();
+            currentImage.loadPixels();
             
-            for (let i = 0; i < img.pixels.length; i += 4) {
-                let r = img.pixels[i];
-                let g = img.pixels[i + 1];
-                let b = img.pixels[i + 2];
+            for (let i = 0; i < currentImage.pixels.length; i += 4) {
+                let r = currentImage.pixels[i];
+                let g = currentImage.pixels[i + 1];
+                let b = currentImage.pixels[i + 2];
                 
                 // Saturação
                 let gray = (r + g + b) / 3;
@@ -561,11 +475,11 @@
                 let newB = gray + (b - gray) * satFactor;
                 
                 // Brilho
-                img.pixels[i] = constrain(newR + brightnessAmount, 0, 255);
-                img.pixels[i + 1] = constrain(newG + brightnessAmount, 0, 255);
-                img.pixels[i + 2] = constrain(newB + brightnessAmount, 0, 255);
+                currentImage.pixels[i] = constrain(newR + brightnessAmount, 0, 255);
+                currentImage.pixels[i + 1] = constrain(newG + brightnessAmount, 0, 255);
+                currentImage.pixels[i + 2] = constrain(newB + brightnessAmount, 0, 255);
             }
-            img.updatePixels();
+            currentImage.updatePixels();
         }
         
         // ============================================
@@ -574,8 +488,8 @@
         function applyRadialDistortion() {
             if (radialAmount === 0) return;
             
-            img.loadPixels();
-            let distorted = new Array(img.pixels.length);
+            currentImage.loadPixels();
+            let distorted = new Array(currentImage.pixels.length);
             let centerX = width / 2;
             let centerY = height / 2;
             let maxRadius = dist(0, 0, centerX, centerY);
@@ -586,7 +500,6 @@
                     let dx = x - centerX;
                     let dy = y - centerY;
                     let radius = dist(x, y, centerX, centerY);
-                    let angle = atan2(dy, dx);
                     
                     let factor = 1 + strength * (radius / maxRadius);
                     let newX = centerX + dx * factor;
@@ -598,25 +511,22 @@
                     if (srcX >= 0 && srcX < width && srcY >= 0 && srcY < height) {
                         let srcIdx = (srcY * width + srcX) * 4;
                         let dstIdx = (y * width + x) * 4;
-                        distorted[dstIdx] = img.pixels[srcIdx];
-                        distorted[dstIdx + 1] = img.pixels[srcIdx + 1];
-                        distorted[dstIdx + 2] = img.pixels[srcIdx + 2];
-                        distorted[dstIdx + 3] = img.pixels[srcIdx + 3];
+                        distorted[dstIdx] = currentImage.pixels[srcIdx];
+                        distorted[dstIdx+1] = currentImage.pixels[srcIdx+1];
+                        distorted[dstIdx+2] = currentImage.pixels[srcIdx+2];
+                        distorted[dstIdx+3] = currentImage.pixels[srcIdx+3];
                     }
                 }
             }
             
             for (let i = 0; i < distorted.length; i++) {
-                if (distorted[i] !== undefined) img.pixels[i] = distorted[i];
+                if (distorted[i] !== undefined) currentImage.pixels[i] = distorted[i];
             }
-            img.updatePixels();
+            currentImage.updatePixels();
         }
         
-        // ============================================
-        // DRAW (vazio - tudo feito nos callbacks)
-        // ============================================
         function draw() {
-            // Nada aqui - a imagem é desenhada nos callbacks
+            // Não é necessário fazer nada aqui
         }
     </script>
 </body>
