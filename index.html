@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyDashboards | GeoPulse + Car Gallery</title>
+    <title>MyDashboards | GeoPulse + API Explorer</title>
     <style>
         * {
             margin: 0;
@@ -107,7 +107,7 @@
         }
         
         .preview2::before {
-            content: "🏎️";
+            content: "🎨";
             position: absolute;
             font-size: 80px;
             bottom: 20px;
@@ -116,7 +116,7 @@
         }
         
         .preview2::after {
-            content: "⚡";
+            content: "📡";
             position: absolute;
             font-size: 50px;
             top: 20px;
@@ -287,20 +287,20 @@
                 </div>
             </div>
 
-            <!-- Dashboard 2 - Car Gallery -->
+            <!-- Dashboard 2 - API Explorer -->
             <div class="dashboard-card">
                 <div class="card-preview preview2"></div>
                 <div class="card-content">
-                    <span class="badge badge-interactive">🏎️ Painel Interativo</span>
-                    <h2>Car Gallery</h2>
-                    <p>API de imagens de carros (Unsplash + CORS proxy) + Carro desportivo decorativo desenhado em p5.js. Aplique filtros interativos como glitch, pixelate e distorção radial.</p>
+                    <span class="badge badge-interactive">🎨 Painel Interativo</span>
+                    <h2>API Explorer</h2>
+                    <p>Explore dados de uma API gratuita (JSONPlaceholder). Carregue utilizadores aleatórios e interaja com o avatar: mude a cor e o tamanho em tempo real.</p>
                     <div class="feature-list">
-                        <span class="feature-tag">🚗 10+ marcas</span>
-                        <span class="feature-tag">📸 API com CORS ativo</span>
-                        <span class="feature-tag">🎨 Carro decorativo p5.js</span>
-                        <span class="feature-tag">🌀 Filtros em tempo real</span>
+                        <span class="feature-tag">📡 API com CORS ativo</span>
+                        <span class="feature-tag">👤 Dados de utilizadores</span>
+                        <span class="feature-tag">🎨 Cor do avatar</span>
+                        <span class="feature-tag">🔵 Tamanho interativo</span>
                     </div>
-                    <a href="dashboard2/" class="btn btn-secondary">Abrir Car Gallery →</a>
+                    <a href="dashboard2/" class="btn btn-secondary">Abrir API Explorer →</a>
                 </div>
             </div>
         </div>
@@ -309,25 +309,25 @@
             <h3>📡 APIs Integradas</h3>
             <ul>
                 <li>🌍 ipapi.co - Geolocalização <span class="cors-badge">CORS ✓</span></li>
-                <li>🏎️ Unsplash via CORS Proxy - Imagens de Carros <span class="cors-badge">CORS ✓</span></li>
+                <li>📡 JSONPlaceholder - Dados de utilizadores <span class="cors-badge">CORS ✓</span></li>
             </ul>
             
             <div class="api-detail">
                 <div>📌 <span>Dashboard 1 (GeoPulse):</span> API ipapi.co - Detecta sua localização (país, cidade, IP, coordenadas, fuso horário) e cria uma visualização em globo 3D com partículas reativas.</div>
-                <div>📌 <span>Dashboard 2 (Car Gallery):</span> API Unsplash via CORS proxy - Busca imagens reais de carros por marca (Audi, BMW, Ferrari, etc.) + Carro desportivo decorativo desenhado com primitivas p5.js no canto inferior do canvas.</div>
+                <div>📌 <span>Dashboard 2 (API Explorer):</span> API JSONPlaceholder - Carrega dados de utilizadores (nome, email, cidade, telefone, empresa). Interaja com o avatar mudando a cor e o tamanho através de sliders.</div>
             </div>
             
             <p style="margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
                 ⚡ Todas as APIs são gratuitas, têm CORS habilitado e não requerem chave de API.
             </p>
             <p style="margin-top: 0.5rem; font-size: 0.8rem; color: #4a5568;">
-                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Pós-processamento interativo com manipulação de pixels
+                🎨 Desenvolvido com p5.js | Visualizações dinâmicas | Interação em tempo real
             </p>
         </div>
 
         <footer>
-            <p>Projeto para EMI para Engenharia Multimédia • ISTEC</p>
-            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza ipapi.co • Car Gallery utiliza Unsplash + CORS Proxy</p>
+            <p>Projeto desenvolvido para a disciplina de Computação Orientada a Dados • Design de Interação / Multimédia • ISTEC</p>
+            <p style="font-size: 0.7rem; margin-top: 0.5rem;">GeoPulse utiliza ipapi.co • API Explorer utiliza JSONPlaceholder</p>
         </footer>
     </div>
 </body>
