@@ -104,9 +104,9 @@
             <select id="brandSelect">
                 <option value="audi">Audi R8</option>
                 <option value="bmw">BMW M4</option>
-                <option value="ferrari">Ferrari F8</option>
+                <option value="ferrari">Ferrari F8 Tributo</option>
                 <option value="lamborghini">Lamborghini Huracán</option>
-                <option value="porsche">Porsche 911</option>
+                <option value="porsche">Porsche 911 Turbo</option>
                 <option value="mercedes">Mercedes-AMG GT</option>
             </select>
             
@@ -137,15 +137,36 @@
 
     <script>
         // ============================================
-        // IMAGENS DE CARROS (Pexels - funcionam com CORS)
+        // IMAGENS DE CARROS (Pexels - URLs específicas por marca)
         // ============================================
         const carImages = {
+            // Audi R8 - carro desportivo da Audi
             audi: "https://images.pexels.com/photos/1255144/audi-car-audi-r8-audi-r8-plus-1255144.jpeg?w=600&h=400&fit=crop",
-            bmw: "https://images.pexels.com/photos/290275/pexels-photo-290275.jpeg?w=600&h=400&fit=crop",
+            
+            // BMW M4 - coupé desportivo
+            bmw: "https://images.pexels.com/photos/290275/2015-bmw-m4-coupe-290275.jpeg?w=600&h=400&fit=crop",
+            
+            // Ferrari F8 Tributo - supercarro italiano
             ferrari: "https://images.pexels.com/photos/337909/ferrari-vehicle-sports-car-supercar-337909.jpeg?w=600&h=400&fit=crop",
-            lamborghini: "https://images.pexels.com/photos/3802510/pexels-photo-3802510.jpeg?w=600&h=400&fit=crop",
-            porsche: "https://images.pexels.com/photos/220133/pexels-photo-220133.jpeg?w=600&h=400&fit=crop",
-            mercedes: "https://images.pexels.com/photos/1130036/pexels-photo-1130036.jpeg?w=600&h=400&fit=crop"
+            
+            // Lamborghini Huracán - supercarro com linhas agressivas
+            lamborghini: "https://images.pexels.com/photos/3802510/lamborghini-huracan-supercar-vehicle-3802510.jpeg?w=600&h=400&fit=crop",
+            
+            // Porsche 911 Turbo - ícone alemão
+            porsche: "https://images.pexels.com/photos/220133/porsche-911-car-sports-car-220133.jpeg?w=600&h=400&fit=crop",
+            
+            // Mercedes-AMG GT - grand tourer
+            mercedes: "https://images.pexels.com/photos/1130036/mercedes-amg-gt-vehicle-car-1130036.jpeg?w=600&h=400&fit=crop"
+        };
+        
+        // URLs alternativas (caso as principais falhem)
+        const fallbackImages = {
+            audi: "https://images.pexels.com/photos/1149017/audi-r8-sports-car-1149017.jpeg?w=600&h=400&fit=crop",
+            bmw: "https://images.pexels.com/photos/120049/bmw-car-120049.jpeg?w=600&h=400&fit=crop",
+            ferrari: "https://images.pexels.com/photos/4580667/ferrari-f8-tributo-supercar-4580667.jpeg?w=600&h=400&fit=crop",
+            lamborghini: "https://images.pexels.com/photos/1032483/lamborghini-vehicle-sports-car-1032483.jpeg?w=600&h=400&fit=crop",
+            porsche: "https://images.pexels.com/photos/2106747/porsche-911-carrera-sports-car-2106747.jpeg?w=600&h=400&fit=crop",
+            mercedes: "https://images.pexels.com/photos/2450972/mercedes-benz-amg-gt-coupe-2450972.jpeg?w=600&h=400&fit=crop"
         };
         
         // ============================================
@@ -221,13 +242,11 @@
             let statusDiv = select('#statusMsg');
             statusDiv.html(text);
             
-            // Remover todas as classes de estilo
             statusDiv.removeClass('status-default');
             statusDiv.removeClass('status-success');
             statusDiv.removeClass('status-error');
             statusDiv.removeClass('status-loading');
             
-            // Adicionar a classe correta
             if (type === 'success') {
                 statusDiv.addClass('status-success');
             } else if (type === 'error') {
@@ -245,40 +264,52 @@
         function loadCarImage() {
             let brand = select('#brandSelect').value();
             let imgUrl = carImages[brand];
+            let brandName = select('#brandSelect').options[select('#brandSelect').selectedIndex].text;
             
-            setStatus('⏳ A carregar imagem...', 'loading');
+            setStatus(`⏳ A carregar ${brandName}...`, 'loading');
             
             loadImage(imgUrl, 
                 (img) => {
-                    // Sucesso!
-                    myImage = img;
-                    
-                    // Redimensionar
-                    if (myImage.width !== canvasW || myImage.height !== canvasH) {
-                        myImage.resize(canvasW, canvasH);
-                    }
-                    
-                    // Guardar pixels originais
-                    myImage.loadPixels();
-                    originalPixelsCopy = [...myImage.pixels];
-                    
-                    setStatus('✅ Imagem carregada! Use os filtros.', 'success');
-                    
-                    // Resetar filtros
-                    resetFiltersUI();
-                    
-                    // Mostrar imagem
-                    image(myImage, 0, 0);
+                    imagemCarregada(img);
                 },
                 (err) => {
-                    console.error('Erro ao carregar:', err);
-                    setStatus('❌ Erro ao carregar imagem. Tente novamente.', 'error');
-                    background(20);
-                    textAlign(CENTER, CENTER);
-                    fill(200);
-                    text("❌ Erro ao carregar imagem\nTente novamente", width/2, height/2);
+                    console.log("Primeira tentativa falhou, tentando fallback...");
+                    let fallbackUrl = fallbackImages[brand];
+                    loadImage(fallbackUrl, 
+                        (img2) => {
+                            imagemCarregada(img2);
+                        },
+                        (err2) => {
+                            setStatus(`❌ Erro ao carregar ${brandName}. Tente novamente.`, 'error');
+                            background(20);
+                            textAlign(CENTER, CENTER);
+                            fill(200);
+                            text(`❌ Erro ao carregar ${brandName}\nTente novamente`, width/2, height/2);
+                        }
+                    );
                 }
             );
+        }
+        
+        function imagemCarregada(img) {
+            myImage = img;
+            
+            // Redimensionar
+            if (myImage.width !== canvasW || myImage.height !== canvasH) {
+                myImage.resize(canvasW, canvasH);
+            }
+            
+            // Guardar pixels originais
+            myImage.loadPixels();
+            originalPixelsCopy = [...myImage.pixels];
+            
+            setStatus('✅ Imagem carregada! Use os filtros.', 'success');
+            
+            // Resetar filtros
+            resetFiltersUI();
+            
+            // Mostrar imagem
+            image(myImage, 0, 0);
         }
         
         // ============================================
