@@ -22,6 +22,7 @@
             max-width: 1000px;
             width: 100%;
             justify-content: center;
+            position: relative;
         }
         
         canvas {
@@ -101,10 +102,48 @@
             font-size: 0.8rem;
             margin-bottom: 15px;
         }
+
+        /* Botão Home */
+        .btn-home {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-home:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: #ff6b6b;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.2);
+        }
+
+        .btn-home::before {
+            content: "←";
+            font-size: 20px;
+        }
     </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
 </head>
 <body>
+    <a href="../index.html" class="btn-home">INÍCIO</a>
+
     <div class="container">
         <div id="canvasContainer"></div>
         <div class="controls">
